@@ -3,7 +3,7 @@ import { Provider } from 'react-redux'
 import { persistor, store } from './store'
 import { View, StatusBar, StatusBarProperties } from 'react-native'
 import { TabNavigator } from 'react-navigation'
-import { AddFlashCard } from './Components/'
+import { AddFlashCard, ListFlashCards } from './Components/'
 import { OS } from './utils/'
 import { color } from './style/'
 import { FontAwesome } from '@expo/vector-icons'
@@ -22,10 +22,19 @@ function UdaciStatusBar({ backgroundColor, ...props }: {
 
 const Tabs = TabNavigator(
   {
-    AddCard: {
+    ListFlashCards: {
+      screen: ListFlashCards,
+      navigationOptions: {
+        tabBarLabel: 'Cards',
+        tabBarIcon: ({ tintColor }: any) => (
+          <FontAwesome name={OS({ ios: 'plus-square', android: 'plus-square' })} size={30} color={tintColor} />
+        )
+      },
+    },
+    AddFlashCard: {
       screen: AddFlashCard,
       navigationOptions: {
-        tabBarLabel: 'Add Card',
+        tabBarLabel: 'Add',
         tabBarIcon: ({ tintColor }: any) => (
           <FontAwesome name={OS({ ios: 'plus-square', android: 'plus-square' })} size={30} color={tintColor} />
         )

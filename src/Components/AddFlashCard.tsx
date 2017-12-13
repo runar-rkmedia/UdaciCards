@@ -49,9 +49,11 @@ export class AddFlashCardC extends Component<IConnectProps, State> {
     }
   }
 
-  Field = ({ field, subValue }: { field: string, subValue?: string }) => (
-    <Input value={this.state[field]} onChange={(e) => this.onChange(field, e.nativeEvent.text, subValue)} />
-  )
+  Field = ({ field, subValue }: { field: string, subValue?: string }) => {
+    return (
+      <Input value={this.state[field]} onChange={(e) => this.onChange(field, e.nativeEvent.text, subValue)} />
+    )
+  }
 
   submit = () => {
     const { question, answer, options, numeral } = this.state
@@ -62,7 +64,7 @@ export class AddFlashCardC extends Component<IConnectProps, State> {
   }
 
   render() {
-    const { type } = this.state
+    const { type, question, answer } = this.state
     const { Field, onChangeType, submit } = this
     return (
       <Container>
@@ -74,12 +76,18 @@ export class AddFlashCardC extends Component<IConnectProps, State> {
         <Content>
           <Form>
             <Item floatingLabel={true}>
+              <Input
+                value={question}
+                onChange={(e) => this.onChange('question', e.nativeEvent.text)}
+              />
               <Label>Question</Label>
-              <Field field="question" />
             </Item>
             <Item floatingLabel={true}>
               <Label>Answer</Label>
-              <Field field="answer" />
+              <Input
+                value={answer}
+                onChange={(e) => this.onChange('answer', e.nativeEvent.text)}
+              />
             </Item>
             <Item>
               <Label>Type</Label>

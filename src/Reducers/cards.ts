@@ -20,6 +20,14 @@ export const cards = (state: CardsStoreState = {}, action: CardsAT) => {
         ...state,
         [uuid()]: action.card
       }
+    case CardsA.remove:
+      let items = { ...state }
+      if (items.hasOwnProperty(action.cardId)) {
+        delete items[action.cardId]
+      }
+      return {
+        ...items
+      }
     default:
       return state
   }
