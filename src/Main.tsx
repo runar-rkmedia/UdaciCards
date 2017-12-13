@@ -1,13 +1,13 @@
-import * as React from 'react'
+import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { store } from './store'
 import { View, StatusBar, StatusBarProperties } from 'react-native'
 import { TabNavigator } from 'react-navigation'
-import { AddCard } from './Components/'
+import { AddFlashCard } from './Components/'
 import { OS } from './utils/'
-import { color } from './Style/'
+import { color } from './style/'
 import { FontAwesome } from '@expo/vector-icons'
-import { Constants } from 'expo'
+import Expo, { Constants } from 'expo'
 
 function UdaciStatusBar({ backgroundColor, ...props }: {
   backgroundColor: string
@@ -22,7 +22,7 @@ function UdaciStatusBar({ backgroundColor, ...props }: {
 const Tabs = TabNavigator(
   {
     AddCard: {
-      screen: AddCard,
+      screen: AddFlashCard,
       navigationOptions: {
         tabBarLabel: 'Add Card',
         tabBarIcon: ({ tintColor }: any) => (
@@ -52,7 +52,14 @@ const Tabs = TabNavigator(
   }
 )
 
-export default class Main extends React.Component {
+export default class Main extends Component {
+  async componentWillMount() {
+    await Expo.Font.loadAsync({
+      'Roboto': require('native-base/Fonts/Roboto.ttf'),
+      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+    })
+  }
+
   render() {
     return (
       <Provider store={store}>

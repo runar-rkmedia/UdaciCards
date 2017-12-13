@@ -1,11 +1,15 @@
 import { CardsA, CardsAT } from '../actions'
-import { Cards } from '../store'
+import { Card } from '../store'
+import UUID from 'uuid'
 
-interface CardsStoreState {
-  [s: string]: Cards
+export interface CardsStoreState {
+  [s: string]: Card
 }
 
+const uuid = UUID.v1
+
 export function cards(state: CardsStoreState = {}, action: CardsAT): CardsStoreState {
+  console.log('hey, ', state, action)
   switch (action.type) {
     case CardsA.recieve:
       return {
@@ -15,7 +19,7 @@ export function cards(state: CardsStoreState = {}, action: CardsAT): CardsStoreS
     case CardsA.add:
       return {
         ...state,
-        ...action.card
+        [uuid()]: action.card
       }
     default:
       return state

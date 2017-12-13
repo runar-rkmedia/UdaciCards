@@ -6,6 +6,10 @@ export const store = createStore(reducer, composeWithDevTools())
 
 type CardValue = string | number
 
+export enum CardTypes {
+  slider, stepper
+}
+
 interface CardOptions {
   displayText: string
   value: CardValue
@@ -13,20 +17,22 @@ interface CardOptions {
 
 interface CardNumeral {
   displayText: string
-  type: 'slider' | 'stepper'
-  value: CardValue
+  type: CardTypes
+  min: number
+  max: number
+  step: number
 }
 
-export interface Cards {
+export interface Card {
   date: number,
   question: string,
   answer: CardValue
   options?: CardOptions[]
-  numeral?: CardNumeral[]
+  numeral?: CardNumeral
 }
 
 export interface StoreState {
   cards: {
-    [s: string]: Cards
+    [s: string]: Card
   }
 }
