@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "sdkVersion": "23.0.0",
+    "orientation": "portrait",
+    "name": "UdaciCards",
+    "description": "Udacity assignment with mobile flashcards",
+    "slug": "udacicards",
+    "version": "1.0",
+    "icon": "",
+    "notification": {
+      "icon": ""
+    },
+    "ios": {
+     "bundleIdentifier": "org.udacicards.exp"
+    },
+    "android": {
+     "package": "org.udacicards.exp"
+   },
+    "packagerOpts": {
+      "sourceExts": ["ts", "tsx"],
+      "transformer": "node_modules/react-native-typescript-transformer/index.js"
+    }
+  }
+}
