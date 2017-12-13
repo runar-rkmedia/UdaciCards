@@ -1,8 +1,15 @@
 import { createStore } from 'redux'
-import { reducer } from '../Reducers/'
-import { composeWithDevTools } from 'remote-redux-devtools'
+import { cards } from '../Reducers/'
+import { persistStore, persistCombineReducers } from 'redux-persist'
+import storage from 'redux-persist/es/storage'
 
-export const store = createStore(reducer, composeWithDevTools())
+const config = {
+  key: 'cards',
+  storage: storage,
+}
+const reducer = persistCombineReducers(config, { cards })
+export const store = createStore(reducer)
+export const persistor = persistStore(store)
 
 type CardValue = string | number
 

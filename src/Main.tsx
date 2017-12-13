@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-import { store } from './store'
+import { persistor, store } from './store'
 import { View, StatusBar, StatusBarProperties } from 'react-native'
 import { TabNavigator } from 'react-navigation'
 import { AddFlashCard } from './Components/'
@@ -8,6 +8,7 @@ import { OS } from './utils/'
 import { color } from './style/'
 import { FontAwesome } from '@expo/vector-icons'
 import Expo, { Constants } from 'expo'
+import { PersistGate } from 'redux-persist/es/integration/react'
 
 function UdaciStatusBar({ backgroundColor, ...props }: {
   backgroundColor: string
@@ -63,10 +64,12 @@ export default class Main extends Component {
   render() {
     return (
       <Provider store={store}>
-        <View style={{ flex: 1 }}>
-          <UdaciStatusBar backgroundColor={color.purple} barStyle="light-content" />
-          <Tabs />
-        </View>
+        <PersistGate persistor={persistor}>
+          <View style={{ flex: 1 }}>
+            <UdaciStatusBar backgroundColor={color.purple} barStyle="light-content" />
+            <Tabs />
+          </View>
+        </PersistGate>
       </Provider>
     )
   }

@@ -8,8 +8,7 @@ export interface CardsStoreState {
 
 const uuid = UUID.v1
 
-export function cards(state: CardsStoreState = {}, action: CardsAT): CardsStoreState {
-  console.log('hey, ', state, action)
+export const cards = (state: CardsStoreState = {}, action: CardsAT) => {
   switch (action.type) {
     case CardsA.recieve:
       return {
