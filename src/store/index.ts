@@ -24,7 +24,7 @@ interface CardOptions {
   value: CardValue
 }
 
-interface CardNumeral {
+export interface CardNumeral {
   displayText: string
   type: CardTypes
   min: number

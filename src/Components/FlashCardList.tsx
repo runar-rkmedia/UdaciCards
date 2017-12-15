@@ -1,16 +1,23 @@
 import React, { Component } from 'react'
 import { FlatList } from 'react-native'
+import { connect, Dispatch } from 'react-redux'
+import { removeCard } from '../actions'
 import {
-  Container,
-  Header, Content, Body, Title, Text, SwipeRow, Button, Icon, View
+  Text, SwipeRow, Button, Icon, View
 } from 'native-base'
-import { Card } from '../store'
+import { Card, } from '../store'
 
 interface KeyedCard extends Card {
   key: string
 }
 
-export class ListFlashCardsC extends Component<IConnectProps> {
+interface Props {
+  cards: {
+    [s: string]: Card
+  }
+}
+
+export class FlashCardListC extends Component<Props & IConnectProps> {
   deleteRow(cardId: string) {
     this.props.removeCard(cardId)
   }
@@ -36,39 +43,22 @@ export class ListFlashCardsC extends Component<IConnectProps> {
       />
     )
   }
-
   render() {
     const { cards } = this.props
     return (
-      <Container>
-        <Header >
-          <Body>
-            <Title>List of cards</Title>
-          </Body>
-        </Header>
-        <Content>
-          <FlatList
-            data={Object.keys(cards).map(
-              (key): KeyedCard => ({
-                ...cards[key],
-                key,
-              }))}
-            renderItem={this.renderCard}
-          />
-        </Content>
-      </Container >
+      <FlatList
+        data={Object.keys(cards).map(
+          (key): KeyedCard => ({
+            ...cards[key],
+            key,
+          }))}
+        renderItem={this.renderCard}
+      />
     )
   }
 }
-import { connect, Dispatch } from 'react-redux'
-import { StoreState } from '../store'
-import { removeCard } from '../actions'
 const connectCreator = connect(
-  ({ cards }: StoreState) => {
-    return {
-      cards
-    }
-  },
+  null,
   (dispatch: Dispatch<{}>) => {
     return {
       removeCard: (cardId: string) => dispatch((removeCard(cardId))),
@@ -76,4 +66,4 @@ const connectCreator = connect(
   },
 )
 type IConnectProps = typeof connectCreator.allProps
-export const ListFlashCards = connectCreator(ListFlashCardsC)
+export const FlashCardList = connectCreator(FlashCardListC)

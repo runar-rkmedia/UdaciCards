@@ -3,7 +3,7 @@ import { Provider } from 'react-redux'
 import { persistor, store } from './store'
 import { View, StatusBar, StatusBarProperties } from 'react-native'
 import { TabNavigator } from 'react-navigation'
-import { AddFlashCard, ListFlashCards } from './Components/'
+import { ListFlashCards, AddFlashCard } from './Containers/'
 import { OS } from './utils/'
 import { color } from './style/'
 import { FontAwesome } from '@expo/vector-icons'
@@ -43,6 +43,9 @@ const Tabs = TabNavigator(
   },
 
   {
+    lazy: true,
+    animationEnabled: true,
+    order: ['AddFlashCard', 'ListFlashCards'],
     navigationOptions: {
     },
     tabBarOptions: {
