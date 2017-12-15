@@ -1,3 +1,3 @@
 export * from './cards'
-import { combineReducers } from 'redux'
-import { cards } from './cards'
+export * from './category'
+export * from './series'

@@ -1,7 +1,7 @@
 import { createStore } from 'redux'
 import { persistStore, persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage'
-import { cards } from '../Reducers/'
+import { cards, categories, series } from '../Reducers/'
 import { composeWithDevTools } from 'remote-redux-devtools'
 
 const config = {
@@ -9,7 +9,7 @@ const config = {
   storage,
 }
 
-const reducer = persistCombineReducers(config, { cards })
+const reducer = persistCombineReducers(config, { cards, categories, series })
 export const store = createStore(reducer, composeWithDevTools())
 export const persistor = persistStore(store)
 
@@ -19,7 +19,7 @@ export enum CardTypes {
   slider, stepper
 }
 
-interface CardOptions {
+export interface CardOptions {
   displayText: string
   value: CardValue
 }
@@ -33,15 +33,29 @@ export interface CardNumeral {
 }
 
 export interface Card {
-  date: number,
-  question: string,
+  seriesId: string
+  date: number
+  question: string
   answer: CardValue
   options?: CardOptions[]
   numeral?: CardNumeral
+}
+export interface Category {
+  displayText: string
+}
+export interface Serie {
+  displayText: string
+  categoryId: string
 }
 
 export interface StoreState {
   cards: {
     [s: string]: Card
+  },
+  series: {
+    [s: string]: Serie
+  },
+  categories: {
+    [s: string]: Category
   }
 }
