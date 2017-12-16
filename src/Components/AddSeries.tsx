@@ -15,12 +15,23 @@ class AddSerieC extends React.Component<IConnectProps, State> {
     this.setState(({
       [field]: value
     }) as any)
+
+  validate = () => {
+    const { displayText, categoryId } = this.state
+    if (!displayText || !categoryId) {
+      return false
+    }
+    return true
+  }
   submit = () => {
     const { displayText, categoryId } = this.state
-    this.props.addSerie({ displayText, categoryId })
+    if (this.validate()) {
+      this.props.addSerie({ displayText, categoryId })
+    }
   }
   render() {
     const { displayText } = this.state
+    const valid = this.validate()
     return (
       <Form>
         <Item floatingLabel={true}>
@@ -28,10 +39,11 @@ class AddSerieC extends React.Component<IConnectProps, State> {
             value={displayText}
             onChange={(e: any) => this.onChange('displayText', e.nativeEvent.text)}
           />
-          <Label>Name of category</Label>
+          <Label>Name of serie</Label>
         </Item>
         <Button
-          primary={true}
+          primary={valid}
+          disabled={!valid}
           onPress={this.submit}
         >
           <Text>Submit</Text>

@@ -31,7 +31,7 @@ export class SeriesListC extends Component<Props & IConnectProps> {
       <SwipeRow
         key={key}
         leftOpenValue={left ? 75 : 0}
-        rightOpenValue={right === null ? -75 : 0}
+        rightOpenValue={right === undefined ? -75 : 0}
         left={left}
         body={
           <Button

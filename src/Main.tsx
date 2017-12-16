@@ -8,7 +8,7 @@ import { AddSerie, AddCategory } from './Components/'
 import { OS } from './utils/'
 import { color } from './style/'
 import { FontAwesome } from '@expo/vector-icons'
-import Expo, { Constants } from 'expo'
+import Expo, { Constants, AppLoading } from 'expo'
 import { PersistGate } from 'redux-persist/es/integration/react'
 
 function UdaciStatusBar({ backgroundColor, ...props }: {
@@ -78,15 +78,24 @@ const Tabs = TabNavigator(
   }
 )
 
-export default class Main extends Component {
+interface State {
+  fontsAreLoaded: boolean
+}
+
+export default class Main extends Component<{}, State> {
+  state = { fontsAreLoaded: false }
   async componentWillMount() {
     await Expo.Font.loadAsync({
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
     })
+    this.setState({fontsAreLoaded: true})
   }
 
   render() {
+    if (!this.state.fontsAreLoaded) {
+      return <AppLoading/>
+    }
     return (
       <Provider store={store}>
         <PersistGate persistor={persistor}>
