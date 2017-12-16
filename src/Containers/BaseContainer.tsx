@@ -6,7 +6,8 @@ interface Props {
   children: any
 }
 
-export const BaseContainer = ({title, children}: Props) => (
+export const BaseContainer = ({title, children}: Props) => {
+  return (
   <Container>
     <Header >
       <Body>
@@ -17,4 +18,4 @@ export const BaseContainer = ({title, children}: Props) => (
       {children}
     </Content>
   </Container >
-)
+)}

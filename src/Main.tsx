@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { persistor, store } from './store'
 import { View, StatusBar, StatusBarProperties } from 'react-native'
-import { TabNavigator } from 'react-navigation'
+import { TabNavigator, StackNavigator } from 'react-navigation'
 import { ListFlashCards, AddFlashCard } from './Containers/'
+import { AddSerie, AddCategory } from './Components/'
 import { OS } from './utils/'
 import { color } from './style/'
 import { FontAwesome } from '@expo/vector-icons'
@@ -20,6 +21,18 @@ function UdaciStatusBar({ backgroundColor, ...props }: {
   )
 }
 
+const AddFlashCardStack = StackNavigator({
+  AddFlashCard: {
+    screen: AddFlashCard
+  },
+  AddSerie: {
+    screen: AddSerie
+  },
+  AddCategory: {
+    screen: AddCategory
+  }
+})
+
 const Tabs = TabNavigator(
   {
     ListFlashCards: {
@@ -32,7 +45,7 @@ const Tabs = TabNavigator(
       },
     },
     AddFlashCard: {
-      screen: AddFlashCard,
+      screen: AddFlashCardStack,
       navigationOptions: {
         tabBarLabel: 'Add',
         tabBarIcon: ({ tintColor }: any) => (
