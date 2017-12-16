@@ -1,15 +1,22 @@
 import React from 'react'
-import { Form, Item, Label, Input, Button, Text } from 'native-base'
-import { Serie } from '../store'
+import { Form, Item, Label, Input, Button, Text, Picker } from 'native-base'
+import { Serie, StoreState } from '../store'
+
+interface Props {
+  categoryId?: string
+}
 
 interface State extends Serie {
 
 }
 
-class AddSerieC extends React.Component<IConnectProps, State> {
-  state = {
-    categoryId: '',
-    displayText: ''
+class AddSerieC extends React.Component<Props & IConnectProps, State> {
+  constructor(props: IConnectProps) {
+    super(props)
+    this.state = {
+      categoryId: this.props.categoryId || '',
+      displayText: ''
+    }
   }
   onChange = (field: string, value: any) =>
     this.setState(({
@@ -30,10 +37,25 @@ class AddSerieC extends React.Component<IConnectProps, State> {
     }
   }
   render() {
-    const { displayText } = this.state
+    const { displayText, categoryId } = this.state
+    const { categories } = this.props
     const valid = this.validate()
     return (
       <Form>
+        <Label>Category</Label>
+        <Picker
+          mode="dropdown"
+          placeholder="Select One"
+          selectedValue={categoryId}
+          onValueChange={console.log}
+        >
+          {Object.keys(categories).map(key => {
+            const category = categories[key]
+            return (
+              <Item key={key} label={category.displayText} value={key} />
+            )
+          })}
+        </Picker>
         <Item floatingLabel={true}>
           <Input
             value={displayText}
@@ -48,14 +70,18 @@ class AddSerieC extends React.Component<IConnectProps, State> {
         >
           <Text>Submit</Text>
         </Button>
-      </Form>
+      </Form >
     )
   }
 }
 import { connect, Dispatch } from 'react-redux'
 import { addSerie } from '../actions'
 const connectCreator = connect(
-  null,
+  ({ categories }: StoreState) => {
+    return {
+      categories
+    }
+  },
   (dispatch: Dispatch<{}>) => {
     return {
       addSerie: (serie: Serie) => {

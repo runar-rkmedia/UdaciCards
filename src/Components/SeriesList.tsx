@@ -2,9 +2,7 @@ import React, { Component } from 'react'
 import { FlatList } from 'react-native'
 import { connect, Dispatch } from 'react-redux'
 import { removeSerie } from '../actions'
-import {
-  Text, SwipeRow, Button, Icon
-} from 'native-base'
+import { Text, SwipeRow, Button, Icon, View } from 'native-base'
 import { Serie } from '../store'
 
 interface KeyedSerie extends Serie {
@@ -51,14 +49,16 @@ export class SeriesListC extends Component<Props & IConnectProps> {
   render() {
     const { series } = this.props
     return (
-      <FlatList
-        data={Object.keys(series).map(
-          (key): KeyedSerie => ({
-            ...series[key],
-            key,
-          }))}
-        renderItem={this.renderSerie}
-      />
+      <View>
+        <FlatList
+          data={Object.keys(series).map(
+            (key): KeyedSerie => ({
+              ...series[key],
+              key,
+            }))}
+          renderItem={this.renderSerie}
+        />
+      </View>
     )
   }
 }
