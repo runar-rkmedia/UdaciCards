@@ -4,12 +4,13 @@ import { StoreState } from '../store'
 import { Icon, Separator, Text, View, Button } from 'native-base'
 import { AddSerie, SeriesList } from './'
 import { StyleSheet } from 'react-native'
+import { NavigationScreenConfigProps } from 'react-navigation'
 
 interface State {
   addToId: string
 }
 
-class ListAllCategoriesC extends React.Component<IConnectProps, State> {
+class ListAllCategoriesC extends React.Component<NavigationScreenConfigProps & IConnectProps, State> {
   state = {
     addToId: ''
   }
@@ -17,7 +18,7 @@ class ListAllCategoriesC extends React.Component<IConnectProps, State> {
     this.setState({ addToId })
   }
   render() {
-    const { categories, series } = this.props
+    const { categories, series, navigation } = this.props
     const { addToId } = this.state
     return (
       <View style={{ flex: 1 }}>
@@ -28,11 +29,19 @@ class ListAllCategoriesC extends React.Component<IConnectProps, State> {
               <Separator bordered={true}>
                 <Text>{displayText}</Text>
               </Separator>
-              <SeriesList series={series[key]} onPress={console.log} />
+              {series[key] && (
+                <SeriesList
+                  series={series[key]}
+                  onPress={(id: string) => navigation.navigate('SerieView', {serie: series[key][id]})}
+                />
+              )}
               <View>
                 {addToId === key ? (
                   <View style={styles.listForm} >
-                    <AddSerie categoryId={key} />
+                    <AddSerie
+                      categoryId={key}
+                      onComplete={() => this.toggleAddSerieForm('')}
+                    />
                   </View>
                 ) : (
                     <Button

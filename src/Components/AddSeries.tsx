@@ -4,6 +4,7 @@ import { Serie, StoreState } from '../store'
 
 interface Props {
   categoryId?: string
+  onComplete?: () => any
 }
 
 interface State extends Serie {
@@ -15,7 +16,8 @@ class AddSerieC extends React.Component<Props & IConnectProps, State> {
     super(props)
     this.state = {
       categoryId: this.props.categoryId || '',
-      displayText: ''
+      displayText: '',
+      id: ''
     }
   }
   onChange = (field: string, value: any) =>
@@ -31,14 +33,18 @@ class AddSerieC extends React.Component<Props & IConnectProps, State> {
     return true
   }
   submit = () => {
-    const { displayText, categoryId } = this.state
+    const { displayText, categoryId, id } = this.state
+    const { onComplete } = this.props
     if (this.validate()) {
-      this.props.addSerie({ displayText, categoryId })
+      this.props.addSerie({ displayText, categoryId, id })
+      if (onComplete) {
+        onComplete()
+      }
     }
   }
   render() {
     const { displayText, categoryId } = this.state
-    const { categories } = this.props
+    const { categories, onComplete } = this.props
     const valid = this.validate()
     return (
       <Form>
@@ -70,6 +76,12 @@ class AddSerieC extends React.Component<Props & IConnectProps, State> {
         >
           <Text>Submit</Text>
         </Button>
+        {onComplete &&
+          <Button
+            onPress={() => onComplete()}
+          >
+            <Text>Cancel</Text>
+          </Button>}
       </Form >
     )
   }
