@@ -1,26 +1,57 @@
 import React, { Component } from 'react'
 import {
-  Form, Item, Input, Label, Picker, Button, Text, View
+  Form, Item, Input, Label, Picker, Button, Text, View, Icon, InputGroup, H2
 } from 'native-base'
-import { Card, CardTypes, CardNumeral, StoreState } from '../store'
+import { StyleSheet, Slider } from 'react-native'
+import { Card, CardTypes, CardNumeral, StoreState, CardOptions } from '../store'
 import { connect, Dispatch } from 'react-redux'
 import { NavigationScreenConfigProps } from 'react-navigation'
+import { Col, Grid } from 'react-native-easy-grid'
 import { addCard } from '../actions'
 import { SelectSeries } from './'
+import { color } from '../style'
+import { isNumber } from '../utils'
+
+const styles = StyleSheet.create({
+  correctButtons: {
+    fontSize: 30
+  }
+})
 
 interface State extends Card {
   type: CardTypes | null
 }
-class AddFlashCardFormC extends Component<NavigationScreenConfigProps &IConnectProps, State> {
-  state = {
-    seriesId: '',
-    date: -1,
-    question: '',
-    answer: '',
-    type: null,
-    options: undefined,
-    numeral: undefined
+
+const inputProps = {
+  underline: true,
+  floatingLabel: true,
+}
+
+const initialState: State = {
+  id: '',
+  seriesId: '',
+  date: -1,
+  question: '',
+  type: null,
+  options: [
+    {
+      displayText: '',
+      correct: false
+    },
+    {
+      displayText: '',
+      correct: true
+    }
+  ],
+  numeral: {
+    min: 0,
+    step: 1,
+    max: 10,
+    correct: 0
   }
+}
+class AddFlashCardFormC extends Component<NavigationScreenConfigProps & IConnectProps, State> {
+  state = initialState
   onChange = (field: string, value: any, subValue: '' | 'numeral' | 'options' = '') => {
     if (subValue) {
       return this.setState((state) => {
@@ -38,69 +69,187 @@ class AddFlashCardFormC extends Component<NavigationScreenConfigProps &IConnectP
       [field]: value
     }) as any)
   }
-  onChangeType = (value: CardTypes) => {
-    switch (value) {
-      case CardTypes.stepper:
-        return this.setState(state => ({
-          numeral: {
-            displayText: 'Slider',
-            type: value,
-            ...state.numeral
-          }
-        }))
-      case CardTypes.slider:
-        return this.setState(state => ({
-          numeral: {
-            displayText: 'Slider',
-            type: value,
-            ...state.numeral
-          }
-        }))
-      default:
-        return
+  formErrors = () => {
+    const { question, seriesId, type, options, numeral } = this.state
+    if (!question || !seriesId || !type) {
+      return 'Some fields were not set.'
     }
+    switch (type) {
+      case CardTypes.options:
+        for (let option of options!) {
+          if (!option.displayText) {
+            return 'Some Options are missing texts.'
+          }
+        }
+        break
+      case CardTypes.slider:
+        const { min, max, step, correct } = (numeral as CardNumeral)
+        for (let n of [max, min, step, correct]) {
+          if (!isNumber(n)) {
+            return 'Some fields are not valid numbers.'
+          }
+        }
+        if (step <= 0 || step >= max) {
+          return 'Step should be above zero and less than max.'
+        }
+        if (min >= max) {
+          return 'Min-value should be less than max-value'
+        }
+        if (correct < min || correct > max) {
+          return 'The answer-value should be somewhere between min and max.'
+        }
+        break
+      default:
+        return 'Got an unknown type'
+    }
+    return false
   }
   submit = () => {
-    const { question, answer, options, numeral, seriesId } = this.state
-    this.props.addCard({
-      date: Date.now(),
-      question, answer, options, numeral, seriesId
-    })
+    if (!this.formErrors()) {
+      const { question, options, numeral, seriesId, id, type } = this.state
+      let typeObject = type === CardTypes.options ? { options } : { numeral }
+      this.props.addCard({
+        date: Date.now(),
+        ...typeObject,
+        question, seriesId, id
+      })
+    }
   }
 
-  renderNumeral = (numeral: CardNumeral) => {
-    const onChange = (key: string, e: any) => this.onChange(key, e.nativeEvent.text, 'numeral')
+  renderNumeral = () => {
+    const { numeral } = this.state
+    const { step, min, max, correct } = numeral!
+    const onChange = (key: string, value: any) => this.onChange(key, value, 'numeral')
+    const onNumChange = (key: string, e: any) => onChange(key, e.nativeEvent.text.replace(/[^0-9,.]/g, ''))
+
     return (
       <View>
-        <Item floatingLabel={true}>
-          <Label>Step</Label>
-          <Input
-            value={numeral.step}
-            onChange={(e: any) => onChange('step', e)}
+        <H2>Slider for numbers</H2>
+        <Grid>
+          <Col>
+            <Item {...inputProps}>
+              <Label>Step</Label>
+              <Input
+                keyboardType="numeric"
+                value={step.toString()}
+                onChange={(e: any) => onNumChange('step', e)}
+              />
+            </Item>
+          </Col>
+          <Col>
+            <Item {...inputProps}>
+              <Label>Min</Label>
+              <Input
+                keyboardType="numeric"
+                value={min.toString()}
+                onChange={(e: any) => onNumChange('min', e)}
+              />
+            </Item>
+          </Col>
+          <Col>
+            <Item {...inputProps}>
+              <Label>Max</Label>
+              <Input
+                keyboardType="numeric"
+                value={max.toString()}
+                onChange={(e: any) => onNumChange('max', e)}
+              />
+            </Item>
+          </Col>
+        </Grid>
+        <Label>Answer: ({correct})</Label>
+        {!this.formErrors() && (
+          <Slider
+            value={correct}
+            step={step}
+            minimumValue={min}
+            maximumValue={max}
+            onValueChange={(value) => onChange('correct', value)}
           />
-        </Item>
-        <Item floatingLabel={true}>
-          <Label>Min</Label>
-          <Input
-            value={numeral.min}
-            onChange={(e: any) => onChange('min', e)}
-          />
-        </Item>
-        <Item floatingLabel={true}>
-          <Label>Max</Label>
-          <Input
-            value={numeral.max}
-            onChange={(e: any) => onChange('max', e)}
-          />
-        </Item>
+        )}
       </View>
     )
   }
+  addOptions = () => {
+    return this.setState(state => {
+      let options: CardOptions[] = (state.options || [])
+      options.push({
+        displayText: '',
+        correct: false
+      })
+      return {
+        options
+      }
+    })
+  }
+  renderOptions = () => {
+    const { options } = this.state
+    const onChange = (key: string, value: any, i: number) => {
+      return this.setState((state) => {
+        let stateOptions = state.options!.slice()
+        stateOptions[i][key] = value
+        return {
+          ...state,
+          options: stateOptions
+        }
+      })
+    }
+    return (
+      <View>
+        <H2>Options</H2>
+        <Text>
+          Add your options below.
+        Set the correct answer(s) by checking the corresponding row.
+        </Text>
+        {options!.map((option, i) => (
+          <InputGroup key={i}>
+            <Button
+              transparent={true}
+              onPress={() => onChange('correct', !option.correct, i)}
+            >
+              {option.correct ? (
+                <Icon name="checkmark-circle" style={[styles.correctButtons, { color: color.success }]} />
+              ) : (
+                  <Icon name="close-circle" style={[styles.correctButtons, { color: color.disabled }]} />
+                )}
 
+            </Button>
+            <Input
+              placehoder="Optiontext"
+              value={option.displayText}
+              onChange={(e: any) => onChange('displayText', e.nativeEvent.text, i)}
+            />
+          </InputGroup>
+        ))}
+        <Button
+          transparent={true}
+          onPress={this.addOptions}
+        >
+          <Icon name="add" color={color.orange} />
+          <Text>Add option</Text>
+        </Button>
+      </View>
+    )
+  }
+  renderType = () => {
+    const { type } = this.state
+    if (!type) {
+      return null
+    }
+    switch (type) {
+      case CardTypes.options:
+        return this.renderOptions()
+      case CardTypes.slider:
+        return this.renderNumeral()
+      default:
+        return null
+    }
+  }
   render() {
-    const { type, question, answer, numeral, seriesId } = this.state
+    const { question, seriesId, type } = this.state
     const { series, navigation } = this.props
-    const { onChangeType, submit, onChange } = this
+    const { submit, onChange } = this
+    const formErrors = this.formErrors()
     return (
       <Form>
         <Label>Series</Label>
@@ -109,7 +258,8 @@ class AddFlashCardFormC extends Component<NavigationScreenConfigProps &IConnectP
             seriesId,
             series,
             onAdd: () => navigation.navigate('AddSerie'),
-            onValueChange: (Id) => onChange('seriesId', Id)}}
+            onValueChange: (Id) => onChange('seriesId', Id)
+          }}
         />
         <Item floatingLabel={true}>
           <Input
@@ -118,13 +268,6 @@ class AddFlashCardFormC extends Component<NavigationScreenConfigProps &IConnectP
           />
           <Label>Question</Label>
         </Item>
-        <Item floatingLabel={true}>
-          <Label>Answer</Label>
-          <Input
-            value={answer}
-            onChange={(e: any) => this.onChange('answer', e.nativeEvent.text)}
-          />
-        </Item>
         <Item>
           <Label>Type</Label>
           <Picker
@@ -132,19 +275,23 @@ class AddFlashCardFormC extends Component<NavigationScreenConfigProps &IConnectP
             placeholder="Type of option to choose from"
             mode="dropdown"
             selectedValue={type}
-            onValueChange={(value: CardTypes) => onChangeType(value)}
+            onValueChange={(value: CardTypes) => onChange('type', value)}
           >
-            <Picker.Item label="Slider" value={CardTypes.slider} />
-            <Picker.Item label="Stepper" value={CardTypes.stepper} />
+            <Picker.Item label="Multiple Options" value={CardTypes.options} />
+            <Picker.Item label="Slider for numbers" value={CardTypes.slider} />
           </Picker>
         </Item>
-        {numeral && this.renderNumeral(numeral)}
+        {this.renderType()}
         <Button
           primary={true}
+          disabled={!!formErrors}
           onPress={submit}
         >
           <Text>Submit</Text>
         </Button>
+        {formErrors && (
+          <Text>{formErrors}</Text>
+        )}
       </Form>
     )
   }

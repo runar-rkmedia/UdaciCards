@@ -1,4 +1,5 @@
 import { Platform, ViewStyle } from 'react-native'
+import { CardTypes } from '../store'
 
 const PLATFORM = Platform.OS
 
@@ -14,5 +15,9 @@ export function OS({ ios, android }: { ios: any, android: any }) {
 }
 
 export function jssOS({ ios, android }: { ios: ViewStyle, android: ViewStyle }) {
-  return OS({ios, android})
+  return OS({ ios, android })
+}
+
+export const isNumber = (n: any) => {
+  return !isNaN(parseFloat(n)) && isFinite(n)
 }

@@ -13,23 +13,21 @@ const reducer = persistCombineReducers(config, { cards, categories, series })
 export const store = createStore(reducer, composeWithDevTools())
 export const persistor = persistStore(store)
 
-type CardValue = string | number
-
 export enum CardTypes {
-  slider, stepper
+  slider = 1,
+  options
 }
 
 export interface CardOptions {
   displayText: string
-  value: CardValue
+  correct: boolean
 }
 
 export interface CardNumeral {
-  displayText: string
-  type: CardTypes
   min: number
   max: number
   step: number
+  correct: number
 }
 
 export interface Card {
@@ -37,7 +35,6 @@ export interface Card {
   seriesId: string
   date: number
   question: string
-  answer: CardValue
   options?: CardOptions[]
   numeral?: CardNumeral
 }
