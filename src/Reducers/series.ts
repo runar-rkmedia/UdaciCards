@@ -16,9 +16,13 @@ export const series = (state: SerieStoreState = {}, action: SerieAT) => {
         ...action.series
       }
     case SerieA.add:
+      const id = uuid()
       return {
         ...state,
-        [uuid()]: action.serie
+        [id]: {
+          ...action.serie,
+          id,
+        }
       }
     case SerieA.remove:
       let items = { ...state }

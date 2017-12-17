@@ -16,9 +16,13 @@ export const categories = (state: CategoryStoreState = {}, action: CategoryAT) =
         ...action.categories
       }
     case CategoryA.add:
+      const id = uuid()
       return {
         ...state,
-        [uuid()]: action.category
+        [id]: {
+          ...action.category,
+          id,
+        }
       }
     case CategoryA.remove:
       let items = { ...state }

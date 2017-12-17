@@ -33,6 +33,7 @@ export interface CardNumeral {
 }
 
 export interface Card {
+  id: string
   seriesId: string
   date: number
   question: string
@@ -41,9 +42,11 @@ export interface Card {
   numeral?: CardNumeral
 }
 export interface Category {
+  id: string
   displayText: string
 }
 export interface Serie {
+  id: string
   displayText: string
   categoryId: string
 }

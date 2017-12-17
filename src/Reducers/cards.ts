@@ -16,9 +16,13 @@ export const cards = (state: CardsStoreState = {}, action: CardsAT) => {
         ...action.cards
       }
     case CardsA.add:
+      const id = uuid()
       return {
         ...state,
-        [uuid()]: action.card
+        [id]: {
+          ...action.card,
+          id,
+        }
       }
     case CardsA.remove:
       let items = { ...state }
