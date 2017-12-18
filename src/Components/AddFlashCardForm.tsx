@@ -3,13 +3,17 @@ import { Alert } from 'react-native'
 import {
   Form, Item, Input, Label, Picker, Button, Text
 } from 'native-base'
-import { Card, CardTypes, CardNumeral, StoreState } from '../store'
+import { Card, CardTypes, CardNumeral, StoreState, Serie } from '../store'
 import { connect, Dispatch } from 'react-redux'
 import { NavigationScreenConfigProps } from 'react-navigation'
 import { addCard } from '../actions'
 import { SelectSeries, OptionsForm, NumeralsForm } from './'
 import { isNumber } from '../utils'
 import { inputProps } from '../style'
+
+interface Props extends NavigationScreenConfigProps {
+  serie?: Serie
+}
 
 interface State extends Card {
   type: CardTypes | null
@@ -38,9 +42,18 @@ const getInitialState = () => ({
     correct: 0
   }
 })
-class AddFlashCardFormC extends Component<NavigationScreenConfigProps & IConnectProps, State> {
-  state = getInitialState()
+class AddFlashCardFormC extends Component<IConnectProps, State> {
   QuestionInput: any
+  constructor(props: IConnectProps) {
+    super(props)
+    const initState = getInitialState()
+    const { serie } = this.props
+    this.state = {
+      ...initState,
+      seriesId: serie ? serie.id : initState.id
+    }
+
+  }
   onChange = (field: string, value: any, subValue: '' | 'numeral' | 'options' = '') => {
     if (subValue) {
       return this.setState((state) => {
@@ -197,5 +210,5 @@ const connectCreator = connect(
     }
   },
 )
-type IConnectProps = typeof connectCreator.allProps
+type IConnectProps = typeof connectCreator.allProps & Props
 export const AddFlashCardForm = connectCreator(AddFlashCardFormC)

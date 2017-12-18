@@ -20,8 +20,15 @@ export const categories = (state: CategoryStoreState = {}, action: CategoryAT) =
       return {
         ...state,
         [id]: {
-          ...action.category,
+          displayText: action.displayText,
           id,
+        }
+      }
+    case CategoryA.edit:
+      return {
+        ...state,
+        [action.category.id]: {
+          ...action.category,
         }
       }
     case CategoryA.remove:

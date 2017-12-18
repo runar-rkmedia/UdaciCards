@@ -1,16 +1,21 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { StoreState } from '../store'
-import { Icon, Separator, Text, View, Button } from 'native-base'
+import { Separator, Text, View, Card } from 'native-base'
 import { AddSerie, SeriesList } from './'
 import { StyleSheet } from 'react-native'
 import { NavigationScreenConfigProps } from 'react-navigation'
+import { Col, Grid } from 'react-native-easy-grid'
+import { TouchableOpacity } from 'react-native'
+interface Props extends NavigationScreenConfigProps {
+  edit?: boolean
+}
 
 interface State {
   addToId: string
 }
 
-class ListAllCategoriesC extends React.Component<NavigationScreenConfigProps & IConnectProps, State> {
+class ListAllCategoriesC extends React.Component<Props & IConnectProps, State> {
   state = {
     addToId: ''
   }
@@ -18,39 +23,66 @@ class ListAllCategoriesC extends React.Component<NavigationScreenConfigProps & I
     this.setState({ addToId })
   }
   render() {
-    const { categories, series, navigation } = this.props
+    const { categories, series, navigation, edit } = this.props
     const { addToId } = this.state
     return (
       <View style={{ flex: 1 }}>
         {Object.keys(categories).map(key => {
-          const { displayText } = categories[key]
+          const category = categories[key]
+          const { displayText } = category
           return (
             <View key={key}>
-              <Separator bordered={true}>
-                <Text>{displayText}</Text>
-              </Separator>
+              {edit ? (
+                <Separator
+                  style={{ paddingRight: 15, height: 50 }}
+                  bordered={true}
+
+                >
+                  <Grid>
+                    <Col>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate('AddCategory', { category })
+                        }
+                      >
+                        <Text style={{ fontSize: 18 }}>{displayText} (Tap to edit title of category)</Text>
+                      </TouchableOpacity>
+                    </Col>
+                    <Col>
+                      <TouchableOpacity
+                        onPress={() => this.toggleAddSerieForm(key)}
+                      >
+                        <Text style={{ fontSize: 18, textAlign: 'right' }}>Add Serie</Text>
+                      </TouchableOpacity>
+                    </Col>
+                  </Grid>
+                </Separator>
+
+              ) : (
+                  <Separator bordered={true}>
+                    <Text>{displayText}</Text>
+                  </Separator>
+                )}
               {series[key] && (
                 <SeriesList
                   series={series[key]}
-                  onPress={(id: string) => navigation.navigate('SerieView', {serie: series[key][id]})}
+                  onPress={(id: string) => navigation.navigate(
+                    edit ? 'AddFlashCard' : 'SerieView',
+                    { serie: series[key][id] })
+                  }
                 />
               )}
               <View>
-                {addToId === key ? (
+                {edit && addToId === key && (
                   <View style={styles.listForm} >
-                    <AddSerie
-                      categoryId={key}
-                      onComplete={() => this.toggleAddSerieForm('')}
-                    />
+                    <Card>
+                      <AddSerie
+                        categoryId={key}
+                        onComplete={() => this.toggleAddSerieForm('')}
+                      />
+                    </Card>
                   </View>
-                ) : (
-                    <Button
-                      onPress={() => this.toggleAddSerieForm(key)}
-                    >
-                      <Icon name="add" />
-                      <Text>Add Series to this category</Text>
-                    </Button>
-                  )}
+                )}
               </View>
             </View>
           )

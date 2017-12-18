@@ -3,12 +3,14 @@ import { CategoryStoreState } from '../Reducers'
 
 export const enum CategoryA {
   recieve = 'recievedCategory',
-  add = 'adddCategory',
+  add = 'addCategory',
+  edit = 'editCategory',
   remove = 'removedCategory'
 }
 export type CategoryAT =
   { type: CategoryA.recieve, categories: CategoryStoreState } |
-  { type: CategoryA.add, category: Category } |
+  { type: CategoryA.add, displayText: string } |
+  { type: CategoryA.edit, category: Category } |
   { type: CategoryA.remove, categoryId: string }
 
 export function recieveCategory(categories: any): CategoryAT {
@@ -17,9 +19,15 @@ export function recieveCategory(categories: any): CategoryAT {
     categories
   }
 }
-export function addCategory(category: Category): CategoryAT {
+export function addCategory(displayText: string): CategoryAT {
   return {
     type: CategoryA.add,
+    displayText
+  }
+}
+export function editCategory(category: Category): CategoryAT {
+  return {
+    type: CategoryA.edit,
     category
   }
 }
