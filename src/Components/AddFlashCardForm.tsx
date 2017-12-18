@@ -36,11 +36,11 @@ const initialState: State = {
   options: [
     {
       displayText: '',
-      correct: false
+      correct: true,
     },
     {
       displayText: '',
-      correct: true
+      correct: false
     }
   ],
   numeral: {
@@ -184,6 +184,16 @@ class AddFlashCardFormC extends Component<NavigationScreenConfigProps & IConnect
   }
   renderOptions = () => {
     const { options } = this.state
+    const setCorrect = (correctOption: CardOptions) => {
+      const newOptions = options!.slice()
+      for (let option of newOptions) {
+        option.correct = option === correctOption
+      }
+      this.setState(state => ({
+        ...state,
+        options: newOptions
+      }))
+    }
     const onChange = (key: string, value: any, i: number) => {
       return this.setState((state) => {
         let stateOptions = state.options!.slice()
@@ -199,13 +209,13 @@ class AddFlashCardFormC extends Component<NavigationScreenConfigProps & IConnect
         <H2>Options</H2>
         <Text>
           Add your options below.
-        Set the correct answer(s) by checking the corresponding row.
+          Set the correct answer by checking the corresponding row.
         </Text>
         {options!.map((option, i) => (
           <InputGroup key={i}>
             <Button
               transparent={true}
-              onPress={() => onChange('correct', !option.correct, i)}
+              onPress={() => setCorrect(option)}
             >
               {option.correct ? (
                 <Icon name="checkmark-circle" style={[styles.correctButtons, { color: color.success }]} />
@@ -215,7 +225,7 @@ class AddFlashCardFormC extends Component<NavigationScreenConfigProps & IConnect
 
             </Button>
             <Input
-              placehoder="Optiontext"
+              placeholder={`Choice #${i + 1}`}
               value={option.displayText}
               onChange={(e: any) => onChange('displayText', e.nativeEvent.text, i)}
             />
@@ -277,7 +287,7 @@ class AddFlashCardFormC extends Component<NavigationScreenConfigProps & IConnect
             selectedValue={type}
             onValueChange={(value: CardTypes) => onChange('type', value)}
           >
-            <Picker.Item label="Multiple Options" value={CardTypes.options} />
+            <Picker.Item label="Choice" value={CardTypes.options} />
             <Picker.Item label="Slider for numbers" value={CardTypes.slider} />
           </Picker>
         </Item>
