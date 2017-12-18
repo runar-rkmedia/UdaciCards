@@ -59,6 +59,7 @@ export class OptionsForm extends React.Component<Props> {
             <Input
               {...inputProps}
               placeholder={`Choice #${i + 1}`}
+              maxLength={50}
               value={option.displayText}
               onChange={(e: any) => this.setChange('displayText', e.nativeEvent.text, i)}
             />

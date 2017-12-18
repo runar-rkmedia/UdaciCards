@@ -10,11 +10,11 @@ import { BaseContainer } from './'
 import { Icon, Fab, View, Button, Container, Header } from 'native-base'
 import { NavigationScreenConfigProps } from 'react-navigation'
 
-export const ListFlashCards = ({navigation}: NavigationScreenConfigProps) => (
+export const ListFlashCards = ({ navigation }: NavigationScreenConfigProps) => (
   <Container>
     <Header />
     <View style={{ flex: 1 }}>
-      <ListAllCategories  {...{navigation}} />
+      <ListAllCategories  {...{ navigation }} />
       <Fab
         active={true}
         direction="up"
@@ -30,10 +30,6 @@ export const ListFlashCards = ({navigation}: NavigationScreenConfigProps) => (
 )
 export const AddFlashCard = (props: NavigationScreenConfigProps) => {
   return (
-    <BaseContainer title={'Add Flashcard'}>
-      <AddFlashCardForm  {...props} />
-      <Text>Current cards:</Text>
-      <ListAllFlashCards  {...props} />
-    </BaseContainer>
+    <AddFlashCardForm  {...props} />
   )
 }

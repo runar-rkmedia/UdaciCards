@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { persistor, store } from './store'
 import { View, StatusBar, StatusBarProperties } from 'react-native'
-import { TabNavigator, StackNavigator } from 'react-navigation'
+import { TabNavigator, StackNavigator, NavigationScreenConfigProps } from 'react-navigation'
 import { ListFlashCards, AddFlashCard } from './Containers/'
 import { AddSerie, AddCategory, SerieView } from './Components/'
 import { OS } from './utils/'
@@ -24,7 +24,10 @@ function UdaciStatusBar({ backgroundColor, ...props }: {
 
 const AddFlashCardStack = StackNavigator({
   AddFlashCard: {
-    screen: AddFlashCard
+    screen: AddFlashCard,
+    navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
+      title: 'Add Flash Card',
+    }),
   },
   AddSerie: {
     screen: AddSerie

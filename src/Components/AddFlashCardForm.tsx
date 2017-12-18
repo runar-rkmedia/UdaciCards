@@ -15,7 +15,7 @@ interface State extends Card {
   type: CardTypes | null
 }
 
-const initialState: State = {
+const getInitialState = () => ({
   id: '',
   seriesId: '',
   date: -1,
@@ -37,9 +37,10 @@ const initialState: State = {
     max: 10,
     correct: 0
   }
-}
+})
 class AddFlashCardFormC extends Component<NavigationScreenConfigProps & IConnectProps, State> {
-  state = initialState
+  state = getInitialState()
+  QuestionInput: any
   onChange = (field: string, value: any, subValue: '' | 'numeral' | 'options' = '') => {
     if (subValue) {
       return this.setState((state) => {
@@ -100,7 +101,7 @@ class AddFlashCardFormC extends Component<NavigationScreenConfigProps & IConnect
     return errors
   }
   submit = () => {
-    if (!this.formErrors()) {
+    if (!this.formErrors().length) {
       const { question, options, numeral, seriesId, id, type } = this.state
       let typeObject = type === CardTypes.options ? { options } : { numeral }
       this.props.addCard({
@@ -108,6 +109,12 @@ class AddFlashCardFormC extends Component<NavigationScreenConfigProps & IConnect
         ...typeObject,
         question, seriesId, id
       })
+      this.setState(state => ({
+        ...getInitialState(),
+        seriesId,
+        type,
+      }))
+      this.QuestionInput._root.focus()
     }
   }
   displayErrors = (errors: string[]) => {
@@ -129,14 +136,6 @@ class AddFlashCardFormC extends Component<NavigationScreenConfigProps & IConnect
             onValueChange: (Id) => onChange('seriesId', Id)
           }}
         />
-        <Item floatingLabel={true}>
-          <Input
-            {...inputProps}
-            value={question}
-            onChange={(e: any) => this.onChange('question', e.nativeEvent.text)}
-          />
-          <Label>Question</Label>
-        </Item>
         <Item>
           <Label>Type</Label>
           <Picker
@@ -149,6 +148,17 @@ class AddFlashCardFormC extends Component<NavigationScreenConfigProps & IConnect
             <Picker.Item label="Choice" value={CardTypes.options} />
             <Picker.Item label="Slider for numbers" value={CardTypes.slider} />
           </Picker>
+        </Item>
+        <Item floatingLabel={true}>
+          <Input
+            {...inputProps}
+            getRef={(ref: any) => this.QuestionInput = ref}
+            autoFocus={true}
+            value={question}
+            maxLength={300}
+            onChange={(e: any) => this.onChange('question', e.nativeEvent.text)}
+          />
+          <Label>Question</Label>
         </Item>
         {type && (type === CardTypes.options ? options && (
           <OptionsForm
