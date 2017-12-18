@@ -18,3 +18,8 @@ export const baseStyle = StyleSheet.create({
     justifyContent: 'space-between'
   },
 })
+
+export const inputProps = {
+  underline: true,
+  floatingLabel: true,
+}
