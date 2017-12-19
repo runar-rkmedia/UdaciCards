@@ -33,6 +33,7 @@ export interface CardNumeral {
 export interface Card {
   id: string
   seriesId: string
+  points: number
   date: number
   question: string
   options?: CardOptions[]

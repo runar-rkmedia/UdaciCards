@@ -103,7 +103,7 @@ const connectCreator = connect(
     })
     return {
       series: seriesGrouped,
-      categories
+      categories,
     }
   }
 )

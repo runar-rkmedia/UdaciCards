@@ -19,11 +19,12 @@ interface State extends Card {
   type: CardTypes | null
 }
 
-const getInitialState = () => ({
+const getInitialState = (): State => ({
   id: '',
   seriesId: '',
   date: -1,
   question: '',
+  points: 10,
   type: CardTypes.options,
   options: [
     {
@@ -72,10 +73,16 @@ class AddFlashCardFormC extends Component<IConnectProps, State> {
     }) as any)
   }
   formErrors = () => {
-    const { question, seriesId, type, options, numeral } = this.state
+    const { question, seriesId, type, options, numeral, points } = this.state
     let errors = []
     if (!question) {
-      errors.push('Please set a question-text')
+      errors.push('Please set a question-text.')
+    }
+    if (!points) {
+      errors.push('Please assign some points to this question.')
+    }
+    if (!isNumber(points)) {
+      errors.push('Points should be a number.')
     }
     if (!seriesId) {
       errors.push('Please select a serie.')
@@ -115,12 +122,12 @@ class AddFlashCardFormC extends Component<IConnectProps, State> {
   }
   submit = () => {
     if (!this.formErrors().length) {
-      const { question, options, numeral, seriesId, id, type } = this.state
+      const { question, options, numeral, seriesId, id, type, points } = this.state
       let typeObject = type === CardTypes.options ? { options } : { numeral }
       this.props.addCard({
         date: Date.now(),
         ...typeObject,
-        question, seriesId, id
+        question, seriesId, id, points: Number(points)
       })
       this.setState(state => ({
         ...getInitialState(),
@@ -134,7 +141,7 @@ class AddFlashCardFormC extends Component<IConnectProps, State> {
     Alert.alert('Form Errors', `– ${errors.join('\n– ')}`)
   }
   render() {
-    const { question, seriesId, type, options, numeral } = this.state
+    const { question, seriesId, type, options, numeral, points } = this.state
     const { series, navigation } = this.props
     const { submit, onChange, displayErrors } = this
     let formErrors = this.formErrors()
@@ -170,6 +177,16 @@ class AddFlashCardFormC extends Component<IConnectProps, State> {
             value={question}
             maxLength={300}
             onChange={(e: any) => this.onChange('question', e.nativeEvent.text)}
+          />
+          <Label>Question</Label>
+        </Item>
+        <Item floatingLabel={true}>
+          <Input
+            {...inputProps}
+            value={points.toString()}
+            maxLength={5}
+            keyboardType="phone-pad"
+            onChange={(e: any) => this.onChange('points', e.nativeEvent.text)}
           />
           <Label>Question</Label>
         </Item>

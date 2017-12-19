@@ -14,7 +14,7 @@ interface State {
 }
 export class ListSeries extends React.Component<Props & NavigationScreenConfigProps, State> {
   state = {
-    edit: true
+    edit: false
   }
   render() {
     const { navigation, screenProps } = this.props
@@ -37,7 +37,7 @@ export class ListSeries extends React.Component<Props & NavigationScreenConfigPr
             </Button>
           </Right>
         </Header>
-        <Content padder={true}>
+        <Content padder={false}>
           <ListAllCategories
             {...{ navigation, screenProps, edit }}
           />

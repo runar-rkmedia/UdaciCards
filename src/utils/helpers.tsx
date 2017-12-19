@@ -17,6 +17,7 @@ export function OS({ ios, android }: { ios: any, android: any }) {
 export function jssOS({ ios, android }: { ios: ViewStyle, android: ViewStyle }) {
   return OS({ ios, android })
 }
+export const iconOS = (icon: string) => `${OS({ios: 'ios', android: 'md'})}-${icon}`
 
 export const isNumber = (n: any) => {
   return !isNaN(parseFloat(n)) && isFinite(n)

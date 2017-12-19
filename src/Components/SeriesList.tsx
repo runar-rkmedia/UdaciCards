@@ -2,12 +2,9 @@ import React, { Component } from 'react'
 import { FlatList } from 'react-native'
 import { connect, Dispatch } from 'react-redux'
 import { removeSerie } from '../actions'
-import { Text, SwipeRow, Button, Icon, View } from 'native-base'
-import { Serie } from '../store'
-
-interface KeyedSerie extends Serie {
-  key: string
-}
+import { Text, ListItem, Left, Right, Body, Button, Icon, View } from 'native-base'
+import { Serie, StoreState } from '../store'
+import { iconOS } from '../utils'
 
 interface Props {
   series: {
@@ -22,28 +19,39 @@ export class SeriesListC extends Component<Props & IConnectProps> {
   deleteRow(serieId: string) {
     this.props.removeSerie(serieId)
   }
-  renderSerie = ({ item }: { item: KeyedSerie }) => {
-    const { displayText, key } = item
-    const { left, right, onPress } = this.props
+  renderSerie = ({ item }: { item: Serie }) => {
+    const { displayText, id } = item
+    const { left, right, onPress, cards } = this.props
+    const itemCards = cards.filter(card => card.seriesId === id)
+    const numCards = itemCards.length
+    const sumOfPoints = itemCards.reduce(
+      (sum, card) => {
+        return sum + card.points
+      },
+      0)
     return (
-      <SwipeRow
-        key={key}
-        leftOpenValue={left ? 75 : 0}
-        rightOpenValue={right === undefined ? -75 : 0}
-        left={left}
-        body={
+      <ListItem
+        icon={true}
+      >
+        <Left>
+          {left ? left : (
+            <Icon name={iconOS('star-outline')} />
+          )}
+        </Left>
+        <Body>
           <Button
             transparent={true}
-            onPress={() => onPress(key)}
+            onPress={() => onPress(id)}
           >
-            <Text>{displayText}</Text>
+            <Text>{displayText} – {numCards} Cards</Text>
           </Button>
-        }
-        right={right ||
-          (<Button danger={true} onPress={() => this.deleteRow(key)}>
-            <Icon active={true} name="trash" />
-          </Button>)}
-      />
+        </Body>
+        <Right>
+          {right ? right : (
+            <Text>0/{sumOfPoints} Points</Text>
+          )}
+        </Right>
+      </ListItem>
     )
   }
   render() {
@@ -51,19 +59,24 @@ export class SeriesListC extends Component<Props & IConnectProps> {
     return (
       <View>
         <FlatList
+          keyExtractor={item => item.id}
           data={Object.keys(series).map(
-            (key): KeyedSerie => ({
-              ...series[key],
-              key,
+            (id): Serie => ({
+              ...series[id],
             }))}
           renderItem={this.renderSerie}
+
         />
       </View>
     )
   }
 }
 const connectCreator = connect(
-  null,
+  ({ cards }: StoreState, ownProps: Props) => {
+    return {
+      cards: Object.keys(cards).map(key => cards[key])
+    }
+  },
   (dispatch: Dispatch<{}>) => {
     return {
       removeSerie: (serieId: string) => dispatch((removeSerie(serieId))),
