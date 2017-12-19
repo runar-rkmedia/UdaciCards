@@ -1,47 +1,36 @@
 import React from 'react'
 import { ListAllCategories } from '../Components'
-import {
-  Body, Title, Content, Icon, Fab, Button, Container, Header,
-  Right
-} from 'native-base'
+import { Content, Icon, Fab, Button, Container, } from 'native-base'
 import { NavigationScreenConfigProps } from 'react-navigation'
 
 interface Props {
-
-}
-interface State {
   edit: boolean
 }
-export class ListSeries extends React.Component<Props & NavigationScreenConfigProps, State> {
-  state = {
-    edit: false
+export class ListSeries extends React.Component<Props & NavigationScreenConfigProps> {
+  static navigationOptions = ({ navigation }: NavigationScreenConfigProps) => {
+    const { state, setParams } = navigation
+    const edit = state.params ? state.params.edit : false
+    return {
+      title: 'List of FlashCards',
+      headerRight: (
+        <Button
+          transparent={true}
+          onPress={() => setParams({ edit: !edit })}
+        >
+          <Icon name="create" />
+        </Button>)
+    }
   }
   render() {
     const { navigation, screenProps } = this.props
-    const { edit } = this.state
+    const { edit } = this.props
     return (
       <Container>
-        <Header >
-          <Body>
-            <Title>{edit ? 'Edit Flash Cards' : 'Flash Cards'}</Title>
-          </Body>
-          <Right>
-            <Button
-              transparent={true}
-              onPress={() => this.setState(state => ({
-                ...state,
-                edit: !state.edit
-              }))}
-            >
-              <Icon name="create" />
-            </Button>
-          </Right>
-        </Header>
-        <Content padder={false}>
+        <Content style={{ flex: 1 }}>
           <ListAllCategories
             {...{ navigation, screenProps, edit }}
           />
-        </Content>
+        </Content >
         {edit && (
           <Fab
             active={true}
@@ -54,7 +43,7 @@ export class ListSeries extends React.Component<Props & NavigationScreenConfigPr
             <Icon name="add" />
           </Fab>
         )}
-      </Container >
+      </Container>
     )
   }
 }
