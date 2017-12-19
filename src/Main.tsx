@@ -2,12 +2,10 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { persistor, store } from './store'
 import { View, StatusBar, StatusBarProperties } from 'react-native'
-import { TabNavigator, StackNavigator, NavigationScreenConfigProps } from 'react-navigation'
-import { ListFlashCards, AddFlashCard, ListSeries } from './Containers/'
+import { StackNavigator } from 'react-navigation'
+import { AddFlashCard, ListSeries } from './Containers/'
 import { AddSerie, AddCategory, SerieView } from './Components/'
-import { OS } from './utils/'
 import { color } from './style/'
-import { FontAwesome } from '@expo/vector-icons'
 import Expo, { Constants, AppLoading } from 'expo'
 import { PersistGate } from 'redux-persist/es/integration/react'
 import { withMappedNavigationProps } from 'react-navigation-props-mapper'
@@ -17,91 +15,27 @@ function UdaciStatusBar({ backgroundColor, ...props }: {
 } & StatusBarProperties) {
   return (
     <View style={{ backgroundColor, height: Constants.statusBarHeight }}>
-      <StatusBar translucent={true} backgroundColor={backgroundColor} {...props} />
+      <StatusBar translucent={true} backgroundColor={backgroundColor} barStyle={'light-content'}  />
     </View>
   )
 }
 
-const AddFlashCardStack = StackNavigator({
-  ListSeries: {
-    screen: ListSeries,
-    navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      header: null
-    }),
-  },
-  AddFlashCard: {
-    screen: withMappedNavigationProps(AddFlashCard),
-    navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      title: 'Add a new Flash Card'
-    }),
-  },
-  AddSerie: {
-    screen: AddSerie
-  },
-  AddCategory: {
-    screen: withMappedNavigationProps(AddCategory)
-  }
-})
-
-const Cards = StackNavigator({
-  ListFlashCards: {
-    screen: ListFlashCards,
-    navigationOptions: ({ navigation }: NavigationScreenConfigProps) => ({
-      title: 'Flash Cards',
-    }),
-  },
-  SerieView: {
-    screen: withMappedNavigationProps(SerieView)
-  },
-})
-
-const Tabs = TabNavigator(
+const FlashCards = StackNavigator(
   {
-    Cards: {
-      screen: Cards,
-      navigationOptions: {
-        tabBarLabel: 'Cards',
-        tabBarIcon: ({ tintColor }: any) => (
-          <FontAwesome name={OS({ ios: 'plus-square', android: 'plus-square' })} size={30} color={tintColor} />
-        )
-      },
-    },
-    AddFlashCard: {
-      screen: AddFlashCardStack,
-      navigationOptions: {
-        tabBarLabel: 'Add',
-        tabBarIcon: ({ tintColor }: any) => (
-          <FontAwesome name={OS({ ios: 'plus-square', android: 'plus-square' })} size={30} color={tintColor} />
-        )
-      },
-    },
+    ListSeries: { screen: ListSeries },
+    SerieView: { screen: withMappedNavigationProps(SerieView) },
+    AddFlashCard: { screen: withMappedNavigationProps(AddFlashCard) },
+    AddSerie: { screen: AddSerie },
+    AddCategory: { screen: withMappedNavigationProps(AddCategory) },
   },
-
   {
-    lazy: true,
-    animationEnabled: true,
-    order: ['AddFlashCard', 'Cards'],
-    navigationOptions: {
-    },
-    tabBarOptions: {
-      activeTintColor: OS({ ios: color.purple, android: color.white }),
-      style: {
-        height: 56,
-        backgroundColor: OS({ ios: color.white, android: color.purple }),
-        shadowColor: 'rgba(0,0,0,0.24)',
-        shadowOffset: {
-          width: 0,
-          height: 3,
-        },
-        shadowRadius: 6,
-        shadowOpacity: 1
-      }
-    }
+    initialRouteName: 'ListSeries',
+    headerMode: 'none',
   }
 )
 
 interface State {
-  fontsAreLoaded: boolean
+  fontsAreLoaded: boolean,
 }
 
 export default class Main extends Component<{}, State> {
@@ -121,10 +55,8 @@ export default class Main extends Component<{}, State> {
     return (
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-          <View style={{ flex: 1 }}>
-            <UdaciStatusBar backgroundColor={color.purple} barStyle="light-content" />
-            <Tabs />
-          </View>
+          <UdaciStatusBar backgroundColor={color.purple} barStyle="light-content" />
+          <FlashCards />
         </PersistGate>
       </Provider>
     )
