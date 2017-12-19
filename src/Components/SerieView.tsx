@@ -1,8 +1,8 @@
 import React from 'react'
-import { View, Text, Card, DeckSwiper, Left, Body, CardItem, Button } from 'native-base'
-import { Serie } from '../store'
+import { View, Text, Card, DeckSwiper, Body, CardItem } from 'native-base'
+import { FlashOption } from '../Components'
 import { connect } from 'react-redux'
-import { StoreState, Card as CardI } from '../store'
+import { Serie, StoreState, Card as CardI } from '../store'
 
 interface Props {
   serie: Serie
@@ -29,9 +29,61 @@ export class SerieViewC extends React.Component<Props & IConnectProps, State> {
       }
     }))
   }
+  renderCard = (card: CardI) => {
+    const { cards } = this.props
+    const { answers } = this.state
+    const { question, numeral, options, points } = card
+    const index = cards.indexOf(card)
+    const answerGiven = answers[card.id]
+    let answeredCorrectly = false
+    let correctAnswers: string[] = []
+    return (
+      <Card style={{ elevation: 3 }}>
+        <CardItem header={true}>
+          <Text>{`${index + 1}/${cards.length}: ${question}`}</Text>
+          <Text note={true}>{numeral ? 'How much...' : options ? 'What...' : null}</Text>
+        </CardItem>
+        <CardItem>
+          <Body>
+            {options && options.map((option, i) => {
+              const answeredThisOption = answerGiven === option.displayText
+              if (option.correct) {
+                correctAnswers.push(option.displayText)
+                if (answeredThisOption) {
+                  answeredCorrectly = true
+                }
+              }
+              return (
+                <FlashOption
+                  key={i}
+                  onAnswer={(cardId, value) => (this.answer(cardId, value))}
+                  {...{
+                    card, option, answerGiven, answeredThisOption}}
+                />
+              )
+            })}
+          </Body>
+        </CardItem>
+        <CardItem footer={true}>
+          {answerGiven && (
+            answeredCorrectly ? (
+              <Text>
+                Hurray, you answered correctly and got {points} points.
+                                    </Text>
+            )
+              : (
+                <Text>
+                  Nope, that is not correct. The correct answer was
+                                      <Text style={{ fontWeight: 'bold' }}> {correctAnswers.join(', ')}</Text>
+                </Text>
+              )
+          )}
+        </CardItem>
+      </Card>
+    )
+  }
   render() {
     const { serie, cards } = this.props
-    const { answers } = this.state
     if (!serie) {
       return (
         <View>
@@ -39,47 +91,12 @@ export class SerieViewC extends React.Component<Props & IConnectProps, State> {
         </View>
       )
     }
+
     return (
       <View>
         <DeckSwiper
           dataSource={cards}
-          renderItem={(card: CardI) => {
-            const { question, numeral, options } = card
-            const index = cards.indexOf(card)
-            const alreadyAnswered = answers[card.id]
-            return (
-              <Card style={{ elevation: 3 }}>
-                <CardItem>
-                  <Left>
-                    <Body>
-                      <Text>{`${index + 1}/${cards.length}: ${question}`}</Text>
-                      <Text note={true}>{numeral ? 'How much...' : options ? 'What...' : null}</Text>
-                    </Body>
-                  </Left>
-                </CardItem>
-                <CardItem>
-                  {options && options.map((option, i) => {
-                    const answeredThisOption = alreadyAnswered === option.displayText
-                    console.log(alreadyAnswered, answeredThisOption, answers)
-                    return (
-                    <Button
-                      light={!answeredThisOption}
-                      primary={option.correct}
-                      success={answeredThisOption && option.correct}
-                      warning={answeredThisOption && !option.correct}
-                      info={!alreadyAnswered}
-                      key={i}
-                      onPress={() => this.answer(card.id, option.displayText)}
-                    >
-                      <Text>{option.displayText}</Text>
-                    </Button>
-                  )})}
-                </CardItem>
-              </Card>
-            )
-          }
-
-          }
+          renderItem={this.renderCard}
         />
       </View>
     )
