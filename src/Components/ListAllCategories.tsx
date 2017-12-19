@@ -1,12 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { StoreState } from '../store'
-import { Separator, Text, View, Card } from 'native-base'
+import { Separator, Text, View, Card, Button, Icon } from 'native-base'
 import { AddSerie, SeriesList } from './'
+import { color } from '../style'
 import { StyleSheet } from 'react-native'
 import { NavigationScreenConfigProps } from 'react-navigation'
 import { Col, Grid } from 'react-native-easy-grid'
-import { TouchableOpacity } from 'react-native'
 interface Props extends NavigationScreenConfigProps {
   edit?: boolean
 }
@@ -40,20 +40,25 @@ class ListAllCategoriesC extends React.Component<Props & IConnectProps, State> {
                 >
                   <Grid>
                     <Col>
-                      <TouchableOpacity
+                      <Button
+                        transparent={true}
                         onPress={() =>
                           navigation.navigate('AddCategory', { category })
                         }
                       >
-                        <Text style={{ fontSize: 18 }}>{displayText} (Tap to edit title of category)</Text>
-                      </TouchableOpacity>
+                        <Text style={{ fontSize: 18 }}>{displayText} (Edit)</Text>
+                      </Button>
                     </Col>
                     <Col>
-                      <TouchableOpacity
+                      <Button
+                        iconLeft={true}
+                        style={{ alignSelf: 'flex-end' }}
+                        transparent={true}
                         onPress={() => this.toggleAddSerieForm(key)}
                       >
-                        <Text style={{ fontSize: 18, textAlign: 'right' }}>Add Serie</Text>
-                      </TouchableOpacity>
+                          <Icon name="add" />
+                          <Text style={{ fontSize: 18, textAlign: 'right', paddingRight: 0 }}>Add Serie</Text>
+                      </Button>
                     </Col>
                   </Grid>
                 </Separator>

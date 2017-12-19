@@ -23,7 +23,7 @@ export class ListSeries extends React.Component<Props & NavigationScreenConfigPr
       <Container>
         <Header >
           <Body>
-            <Title>Edit FlashCards</Title>
+            <Title>{edit ? 'Edit Flash Cards' : 'Flash Cards'}</Title>
           </Body>
           <Right>
             <Button
