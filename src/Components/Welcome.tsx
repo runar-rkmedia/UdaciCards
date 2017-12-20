@@ -1,9 +1,12 @@
 import React from 'react'
-import { H1, H2, H3, Text, Button, View, Thumbnail } from 'native-base'
+import { H1, H2, H3, Text, Button, View } from 'native-base'
 import { NavigationScreenConfigProps } from 'react-navigation'
-import { StyleSheet, Animated, Image } from 'react-native'
+import { StyleSheet, Animated } from 'react-native'
 import { baseStyle, color } from '../style'
+import SvgUri from 'react-native-svg-uri'
 interface Props { }
+
+const gears = require('../assets/gears.svg')
 
 interface State {
   header: {
@@ -34,12 +37,10 @@ export class Welcome extends React.Component<Props, State> {
         Animated.timing(header.opacity, {
           toValue: 1,
           duration: 1000,
-          delay: 8000,
         }
         ),
         Animated.timing(header.marginTop, {
           toValue: 0,
-          delay: 8000,
           duration: 1000,
         }
         ),
@@ -61,7 +62,7 @@ export class Welcome extends React.Component<Props, State> {
     const br = '\n'
     let { header, body } = this.state
     return (
-      <View style={[baseStyle.center, { backgroundColor: color.lightPurp }]} >
+      <View style={[baseStyle.center, { backgroundColor: color.NavyBlue }]} >
         <View style={{ flex: .2 }} />
         <Animated.View
           style={{
@@ -70,7 +71,20 @@ export class Welcome extends React.Component<Props, State> {
             marginTop: header.marginTop,
           }}
         >
-          <H1 style={[styles.text, styles.logo]} >UdaciCards</H1>
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <View
+              style={{ position: 'absolute', left: -65, top: -10}}
+            >
+              <SvgUri
+                width={60}
+                height={60}
+                fill={color.white}
+                source={gears}
+              />
+            </View>
+            <H1 style={[styles.text, styles.logo]} >UdaciCards</H1>
+          </View>
+
           <H2 style={[styles.text, styles.welcome]}>Welcome</H2>
         </Animated.View>
         <Animated.View
@@ -84,7 +98,7 @@ export class Welcome extends React.Component<Props, State> {
             style={[styles.text, styles.welcome, { flex: 1 }]}
           >
             You seem new around here.{br}Thank you for droppping by.
-            </H3>
+          </H3>
           <Text style={[styles.text, { flex: 1, fontSize: 20 }]}>
             Would you like to get started right away with some awesome Flash Cards to get a feel for this place?
             </Text>
@@ -92,12 +106,12 @@ export class Welcome extends React.Component<Props, State> {
             <Button
               {...buttonProps}
             >
-              <Text style={{ textAlign: 'center' }}>Yes, give me all your Flash Cards</Text>
+              <Text>Yes, give me all your Flash Cards</Text>
             </Button>
             <Button
               {...buttonProps}
             >
-              <Text style={{ textAlign: 'center' }}>No, I want to start fresh</Text>
+              <Text>No, I want to start fresh</Text>
             </Button>
           </View>
         </Animated.View>
@@ -111,7 +125,8 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: 'center',
     width: 300,
-    marginBottom: 20
+    marginBottom: 20,
+    justifyContent: 'center',
   },
   logo: {
   },

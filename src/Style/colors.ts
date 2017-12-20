@@ -10,4 +10,5 @@ export const color = {
   black: '#0b0129',
   success: '#2da355',
   disabled: '#3a5443',
+  NavyBlue: '#1974D2'
 }
