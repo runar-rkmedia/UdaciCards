@@ -10,8 +10,6 @@ export const baseStyle = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 30,
-    marginLeft: 30,
   },
   container: {
     flex: 1,

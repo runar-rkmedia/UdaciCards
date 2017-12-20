@@ -4,7 +4,7 @@ import { persistor, store } from './store'
 import { View, StatusBar, StatusBarProperties } from 'react-native'
 import { StackNavigator } from 'react-navigation'
 import { ListSeries, EditSerie } from './Containers/'
-import { AddSerie, AddCategory, SerieView } from './Components/'
+import { AddSerie, AddCategory, SerieView, Welcome } from './Components/'
 import { color } from './style/'
 import Expo, { Constants, AppLoading } from 'expo'
 import { PersistGate } from 'redux-persist/es/integration/react'
@@ -22,6 +22,7 @@ function UdaciStatusBar({ backgroundColor, ...props }: {
 
 const FlashCards = StackNavigator(
   {
+    Welcome: { screen: withMappedNavigationProps(Welcome) },
     ListSeries: { screen: withMappedNavigationProps(ListSeries) },
     SerieView: { screen: withMappedNavigationProps(SerieView) },
     AddFlashCard: { screen: withMappedNavigationProps(EditSerie) },
@@ -29,7 +30,7 @@ const FlashCards = StackNavigator(
     AddCategory: { screen: withMappedNavigationProps(AddCategory) },
   },
   {
-    initialRouteName: 'ListSeries',
+    initialRouteName: 'Welcome',
   }
 )
 
