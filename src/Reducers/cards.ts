@@ -1,12 +1,10 @@
 import { CardsA, CardsAT } from '../actions'
 import { Card } from '../store'
-import UUID from 'uuid'
+import { uuid } from '../utils'
 
 export interface CardsStoreState {
   [s: string]: Card
 }
-
-const uuid = UUID.v1
 
 export const cards = (state: CardsStoreState = {}, action: CardsAT) => {
   switch (action.type) {

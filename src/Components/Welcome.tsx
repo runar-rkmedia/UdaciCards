@@ -3,6 +3,7 @@ import { H1, H2, H3, Text, Button, View } from 'native-base'
 import { NavigationScreenConfigProps } from 'react-navigation'
 import { StyleSheet, Animated } from 'react-native'
 import { baseStyle, color } from '../style'
+import { exampleData } from '../utils'
 import SvgUri from 'react-native-svg-uri'
 interface Props { }
 
@@ -14,23 +15,27 @@ interface State {
     marginTop: Animated.Value
   }
 }
-export class Welcome extends React.Component<Props, State> {
-  state = {
-    header: {
-      opacity: new Animated.Value(0),
-      marginTop: new Animated.Value(-200)
-    },
-    body: {
-      opacity: new Animated.Value(0),
-      scale: new Animated.Value(0)
-    }
+const initialState = () => ({
+  header: {
+    opacity: new Animated.Value(0),
+    marginTop: new Animated.Value(-200)
+  },
+  body: {
+    opacity: new Animated.Value(0),
+    scale: new Animated.Value(0)
   }
+})
+class WelcomeC extends React.Component<IConnectProps, State> {
+  state = initialState()
   static navigationOptions = ({ navigation }: NavigationScreenConfigProps) => {
     return {
       header: null
     }
   }
   componentDidMount() {
+    this.animateIn()
+  }
+  animateIn = (reset?: boolean) => {
     let { header, body } = this.state
     Animated.sequence([
       Animated.parallel([
@@ -58,9 +63,39 @@ export class Welcome extends React.Component<Props, State> {
       ]),
     ]).start()
   }
+  animateOut = (callback: any = (() => { return })) => {
+    let { header, body } = this.state
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(header.opacity, {
+          toValue: 0,
+          duration: 1000,
+        }
+        ),
+        Animated.timing(body.opacity, {
+          toValue: 0,
+          duration: 1000,
+        }
+        ),
+        Animated.timing(body.scale, {
+          delay: 400,
+          toValue: .5,
+        }
+        ),
+      ]),
+    ]).start(callback)
+  }
+  resetAnimation = () => {
+    let { header, body } = this.state
+    header.opacity.setValue(0)
+    header.marginTop.setValue(0)
+    body.opacity.setValue(0)
+    body.scale.setValue(0)
+  }
   render() {
     const br = '\n'
     let { header, body } = this.state
+    let { navigation } = this.props
     return (
       <View style={[baseStyle.center, { backgroundColor: color.NavyBlue }]} >
         <View style={{ flex: .2 }} />
@@ -73,7 +108,7 @@ export class Welcome extends React.Component<Props, State> {
         >
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <View
-              style={{ position: 'absolute', left: -65, top: -10}}
+              style={{ position: 'absolute', left: -65, top: -10 }}
             >
               <SvgUri
                 width={60}
@@ -104,11 +139,19 @@ export class Welcome extends React.Component<Props, State> {
             </Text>
           <View style={{ flex: 1 }}>
             <Button
+              onPress={() => {
+                this.props.recieveStore(exampleData)
+                this.animateOut(() => navigation.navigate('ListSeries'))
+              }}
               {...buttonProps}
             >
               <Text>Yes, give me all your Flash Cards</Text>
             </Button>
             <Button
+              onPress={() => {
+                this.resetAnimation()
+                this.animateIn()
+              }}
               {...buttonProps}
             >
               <Text>No, I want to start fresh</Text>
@@ -148,3 +191,23 @@ const buttonProps = {
   bordered: true,
   light: true
 }
+
+import { connect, Dispatch } from 'react-redux'
+import { recieveCards, recieveSerie, recieveCategory } from '../actions'
+import { StoreState } from '../store'
+const connectCreator = connect(
+  null,
+  (dispatch: Dispatch<{}>) => {
+    return {
+      recieveStore: (store: StoreState) => {
+        return Promise.all([
+          dispatch(recieveCards(store.cards)),
+          dispatch(recieveSerie(store.series)),
+          dispatch(recieveCategory(store.categories)),
+        ])
+      },
+    }
+  },
+)
+type IConnectProps = typeof connectCreator.allProps & Props & NavigationScreenConfigProps
+export const Welcome = connectCreator(WelcomeC)

@@ -11,7 +11,9 @@ export type SerieAT =
   { type: SerieA.add, serie: Serie } |
   { type: SerieA.remove, serieId: string }
 
-export function recieveSerie(series: any): SerieAT {
+export function recieveSerie(series: {
+  [s: string]: Serie
+}): SerieAT {
   return {
     type: SerieA.recieve,
     series

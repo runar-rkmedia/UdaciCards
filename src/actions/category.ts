@@ -13,7 +13,9 @@ export type CategoryAT =
   { type: CategoryA.edit, category: Category } |
   { type: CategoryA.remove, categoryId: string }
 
-export function recieveCategory(categories: any): CategoryAT {
+export function recieveCategory(categories: {
+  [s: string]: Category
+}): CategoryAT {
   return {
     type: CategoryA.recieve,
     categories

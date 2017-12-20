@@ -1,12 +1,11 @@
 import { CategoryA, CategoryAT } from '../actions'
 import { Category } from '../store'
-import UUID from 'uuid'
+import { uuid } from '../utils'
 
 export interface CategoryStoreState {
   [s: string]: Category
 }
 
-const uuid = UUID.v1
 
 export const categories = (state: CategoryStoreState = {}, action: CategoryAT) => {
   switch (action.type) {

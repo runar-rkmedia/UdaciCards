@@ -11,7 +11,9 @@ export type CardsAT =
   { type: CardsA.add, card: Card } |
   { type: CardsA.remove, cardId: string }
 
-export function recieveCards(cards: any): CardsAT {
+export function recieveCards(cards: {
+  [s: string]: Card
+}): CardsAT {
   return {
     type: CardsA.recieve,
     cards

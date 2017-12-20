@@ -1,5 +1,8 @@
 import { Platform, ViewStyle } from 'react-native'
 import { CardTypes } from '../store'
+import UUID from 'uuid'
+
+export const uuid = UUID.v4
 
 const PLATFORM = Platform.OS
 
