@@ -1,6 +1,5 @@
 import React from 'react'
 import { H1, H2, H3, Text, Button, View } from 'native-base'
-import { NavigationScreenConfigProps } from 'react-navigation'
 import { StyleSheet, Animated } from 'react-native'
 import { baseStyle, color } from '../style'
 import { exampleData } from '../utils'
@@ -8,6 +7,10 @@ import SvgUri from 'react-native-svg-uri'
 interface Props { }
 
 const gears = require('../assets/gears.svg')
+
+interface Props {
+  onNavigate: (location: string) => any
+}
 
 interface State {
   header: {
@@ -25,13 +28,9 @@ const initialState = () => ({
     scale: new Animated.Value(0)
   }
 })
+
 class WelcomeC extends React.Component<IConnectProps, State> {
   state = initialState()
-  static navigationOptions = ({ navigation }: NavigationScreenConfigProps) => {
-    return {
-      header: null
-    }
-  }
   componentDidMount() {
     this.animateIn()
   }
@@ -95,7 +94,7 @@ class WelcomeC extends React.Component<IConnectProps, State> {
   render() {
     const br = '\n'
     let { header, body } = this.state
-    let { navigation } = this.props
+    let { onNavigate } = this.props
     return (
       <View style={[baseStyle.center, { backgroundColor: color.NavyBlue }]} >
         <View style={{ flex: .2 }} />
@@ -141,17 +140,14 @@ class WelcomeC extends React.Component<IConnectProps, State> {
             <Button
               onPress={() => {
                 this.props.recieveStore(exampleData)
-                this.animateOut(() => navigation.navigate('ListSeries'))
+                this.animateOut(() => onNavigate('ListSeries'))
               }}
               {...buttonProps}
             >
               <Text>Yes, give me all your Flash Cards</Text>
             </Button>
             <Button
-              onPress={() => {
-                this.resetAnimation()
-                this.animateIn()
-              }}
+              onPress={() => this.animateOut(() => onNavigate('AddCategory'))}
               {...buttonProps}
             >
               <Text>No, I want to start fresh</Text>
@@ -209,5 +205,5 @@ const connectCreator = connect(
     }
   },
 )
-type IConnectProps = typeof connectCreator.allProps & Props & NavigationScreenConfigProps
+type IConnectProps = typeof connectCreator.allProps & Props
 export const Welcome = connectCreator(WelcomeC)
