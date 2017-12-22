@@ -1,8 +1,9 @@
 import React from 'react'
 import { View, Text, Card, DeckSwiper, Body, CardItem } from 'native-base'
 import { FlashOption } from '../Components'
-import { connect } from 'react-redux'
-import { Serie, StoreState, Card as CardI } from '../store'
+import { connect, Dispatch } from 'react-redux'
+import { setUserAnswer } from '../actions'
+import { Serie, StoreState, Card as CardI, CardOptions } from '../store'
 
 interface Props {
   serie: Serie
@@ -20,12 +21,13 @@ const initialState: State = {
 
 export class SerieViewC extends React.Component<Props & IConnectProps, State> {
   state = initialState
-  answer = (cardID: string, value: any) => {
+  answer = (cardID: string, option: CardOptions) => {
+    this.props.setUserAnswer(this.props.cardsHash[cardID], option.correct)
     this.setState((state): State => ({
       ...state,
       answers: {
         ...state.answers,
-        [cardID]: value
+        [cardID]: option.displayText
       }
     }))
   }
@@ -56,9 +58,10 @@ export class SerieViewC extends React.Component<Props & IConnectProps, State> {
               return (
                 <FlashOption
                   key={i}
-                  onAnswer={(cardId, value) => (this.answer(cardId, value))}
+                  onAnswer={(cardId, value) => (this.answer(cardId, option))}
                   {...{
-                    card, option, answerGiven, answeredThisOption}}
+                    card, option, answerGiven, answeredThisOption
+                  }}
                 />
               )
             })}
@@ -106,9 +109,15 @@ export class SerieViewC extends React.Component<Props & IConnectProps, State> {
 const connectCreator = connect(
   ({ cards }: StoreState, { serie }: Props) => {
     return {
+      cardsHash: cards,
       cards: serie && Object.keys(cards)
         .map(key => cards[key])
         .filter(card => card.seriesId === serie.id)
+    }
+  },
+  (dispatch: Dispatch<{}>) => {
+    return {
+      setUserAnswer: (answerCard: CardI, correct: boolean) => dispatch(setUserAnswer(answerCard, correct))
     }
   },
 )

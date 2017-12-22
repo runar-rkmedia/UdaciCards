@@ -1,7 +1,9 @@
 import { createStore } from 'redux'
 import { persistStore, persistCombineReducers } from 'redux-persist'
 import storage from 'redux-persist/es/storage'
-import { cards, categories, series } from '../Reducers/'
+import {
+  reducers, CardsStoreState, SerieStoreState, CategoryStoreState, UserAnswerStoreState
+} from '../Reducers/'
 import { composeWithDevTools } from 'remote-redux-devtools'
 
 const config = {
@@ -9,7 +11,7 @@ const config = {
   storage,
 }
 
-const reducer = persistCombineReducers(config, { cards, categories, series })
+const reducer = persistCombineReducers(config, reducers)
 export const store = createStore(reducer, composeWithDevTools())
 export const persistor = persistStore(store)
 
@@ -48,15 +50,13 @@ export interface Serie {
   displayText: string
   categoryId: string
 }
-
+// UserAnswers is a hashtable of SerieIDs, containing CardIDs
+export type UserAnswer = {
+  [s: string]: boolean
+}
 export interface StoreState {
-  cards: {
-    [s: string]: Card
-  },
-  series: {
-    [s: string]: Serie
-  },
-  categories: {
-    [s: string]: Category
-  }
+  cards: CardsStoreState
+  series: SerieStoreState,
+  categories: CategoryStoreState
+  userAnswers: UserAnswerStoreState
 }
