@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { View, StatusBar, StatusBarProperties } from 'react-native'
-import { Text } from 'native-base'
 import { Provider } from 'react-redux'
 import Expo, { Constants, AppLoading } from 'expo'
 import { persistor, store,  } from './store'

@@ -167,11 +167,11 @@ export const exampleData: StoreState = {
         },
         {
           displayText: 'Awesomely with JSS, or CSS in JS',
-          correct: false
+          correct: true
         },
         {
           displayText: 'Only Apple and Google can use style, as this needs special native-code.',
-          correct: true
+          correct: false
         },
       ]
     },

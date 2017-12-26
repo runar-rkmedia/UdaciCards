@@ -4,7 +4,7 @@ import { connect, Dispatch } from 'react-redux'
 import { removeSerie } from '../actions'
 import { Text, ListItem, Left, Right, Body, Button, Icon, View } from 'native-base'
 import { Serie, StoreState } from '../store'
-import { iconOS } from '../utils'
+import { iconOS, getUserScore } from '../utils'
 
 interface Props {
   series: {
@@ -19,23 +19,20 @@ export class SeriesListC extends Component<Props & IConnectProps> {
   deleteRow(serieId: string) {
     this.props.removeSerie(serieId)
   }
+
   renderSerie = ({ item }: { item: Serie }) => {
     const { displayText, id } = item
-    const { left, right, onPress, cards } = this.props
+    const { left, right, onPress, cards, userAnswer } = this.props
     const itemCards = cards.filter(card => card.seriesId === id)
     const numCards = itemCards.length
-    const sumOfPoints = itemCards.reduce(
-      (sum, card) => {
-        return sum + card.points
-      },
-      0)
+    const [userPoints, sumOfPoints] = getUserScore(userAnswer, itemCards)
     return (
       <ListItem
         icon={true}
       >
         <Left>
           {left ? left : (
-            <Icon name={iconOS('star-outline')} />
+            <Icon name={userPoints === sumOfPoints ? iconOS('star') : iconOS('star-outline')} />
           )}
         </Left>
         <Body>
@@ -48,7 +45,7 @@ export class SeriesListC extends Component<Props & IConnectProps> {
         </Body>
         <Right>
           {right ? right : (
-            <Text>0/{sumOfPoints} Points</Text>
+            <Text>{`${userPoints}/${sumOfPoints} Points`}</Text>
           )}
         </Right>
       </ListItem>
@@ -72,8 +69,9 @@ export class SeriesListC extends Component<Props & IConnectProps> {
   }
 }
 const connectCreator = connect(
-  ({ cards }: StoreState, ownProps: Props) => {
+  ({ cards, userAnswer}: StoreState, ownProps: Props) => {
     return {
+      userAnswer,
       cards: Object.keys(cards).map(key => cards[key])
     }
   },

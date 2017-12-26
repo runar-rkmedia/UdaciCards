@@ -13,14 +13,19 @@ export const userAnswer = (state: UserAnswerStoreState = {}, action: UserAnswerA
         ...action.answers
       }
     case UserAnswerA.set:
-      const seriesId = action.answerCard.seriesId
       const cardId = action.answerCard.id
-      return {
-        ...state,
-        [seriesId]: {
-          ...state[seriesId],
-          [cardId]: action.correct || undefined
+      if (action.correct) {
+        return {
+          ...state,
+          [cardId]: action.correct
         }
+      }
+      let s = { ...state }
+      if (s.hasOwnProperty(action.answerCard.id)) {
+        delete s[action.answerCard.id]
+      }
+      return {
+        ...s
       }
     case UserAnswerA.remove:
       let items = { ...state }

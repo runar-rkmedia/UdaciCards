@@ -50,13 +50,13 @@ export interface Serie {
   displayText: string
   categoryId: string
 }
-// UserAnswers is a hashtable of SerieIDs, containing CardIDs
+// UserAnswers is a hashtable of CardIDs, with the value being the answer given
 export type UserAnswer = {
-  [s: string]: boolean
+  [s: string]: string
 }
 export interface StoreState {
   cards: CardsStoreState
   series: SerieStoreState,
   categories: CategoryStoreState
-  userAnswers: UserAnswerStoreState
+  userAnswer: UserAnswerStoreState
 }

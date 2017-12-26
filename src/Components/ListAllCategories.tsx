@@ -6,6 +6,7 @@ import { AddSerie, SeriesList } from './'
 import { StyleSheet } from 'react-native'
 import { NavigationScreenConfigProps } from 'react-navigation'
 import { Col, Grid } from 'react-native-easy-grid'
+import { getUserScore } from '../utils'
 interface Props extends NavigationScreenConfigProps {
   edit?: boolean
 }
@@ -22,13 +23,17 @@ class ListAllCategoriesC extends React.Component<Props & IConnectProps, State> {
     this.setState({ addToId })
   }
   render() {
-    const { categories, series, navigation, edit } = this.props
+    const { categories, series, navigation, edit, userAnswer, cards } = this.props
     const { addToId } = this.state
     return (
       <View style={{ flex: 1 }}>
         {Object.keys(categories).map(key => {
           const category = categories[key]
           const { displayText } = category
+          const categorySeries = Object.keys(series[key]).map(k => series[key][k])
+          const categoryCards = Object.keys(cards).map(k => cards[k])
+            .filter(card => categorySeries.find(serie => serie.id === card.seriesId))
+          const [points, sum] = getUserScore(userAnswer, categoryCards)
           return (
             <View key={key}>
               {edit ? (
@@ -55,16 +60,15 @@ class ListAllCategoriesC extends React.Component<Props & IConnectProps, State> {
                         transparent={true}
                         onPress={() => this.toggleAddSerieForm(key)}
                       >
-                          <Icon name="add" />
-                          <Text style={{ fontSize: 18, textAlign: 'right', paddingRight: 0 }}>Add Serie</Text>
+                        <Icon name="add" />
+                        <Text style={{ fontSize: 18, textAlign: 'right', paddingRight: 0 }}>Add Serie</Text>
                       </Button>
                     </Col>
                   </Grid>
                 </Separator>
-
               ) : (
                   <Separator bordered={true}>
-                    <Text>{displayText}</Text>
+                    <Text>{`${displayText} ${points}/${sum}`}</Text>
                   </Separator>
                 )}
               {series[key] && (
@@ -96,7 +100,7 @@ class ListAllCategoriesC extends React.Component<Props & IConnectProps, State> {
   }
 }
 const connectCreator = connect(
-  ({ categories, series }: StoreState) => {
+  ({ categories, series, userAnswer, cards }: StoreState) => {
     let seriesGrouped = {}
     Object.keys(series).map(key => {
       const serie = series[key]
@@ -108,6 +112,8 @@ const connectCreator = connect(
     return {
       series: seriesGrouped,
       categories,
+      userAnswer,
+      cards
     }
   }
 )
