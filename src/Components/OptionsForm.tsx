@@ -2,8 +2,8 @@ import React from 'react'
 import { View, H2, Text, InputGroup, Button, Icon, Input } from 'native-base'
 import { CardOptions } from '../store'
 import { StyleSheet } from 'react-native'
-import { color } from '../style'
-import { inputProps } from '../style'
+import { color } from '../Style'
+import { inputProps } from '../Style'
 
 interface Props {
   options: CardOptions[]

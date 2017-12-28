@@ -3,7 +3,7 @@ import { View, H2, Input, Item, Label } from 'native-base'
 import { Col, Grid } from 'react-native-easy-grid'
 import { CardNumeral } from '../store'
 import { Slider } from 'react-native'
-import { inputProps } from '../style'
+import { inputProps } from '../Style'
 
 interface Props {
   numeral: CardNumeral

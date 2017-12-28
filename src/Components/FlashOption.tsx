@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Icon, Text } from 'native-base'
 import { Card, CardOptions } from '../store'
-import { color } from '../style'
+import { color } from '../Style'
 
 interface Props {
   card: Card

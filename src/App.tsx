@@ -3,7 +3,7 @@ import { View, StatusBar, StatusBarProperties } from 'react-native'
 import { Provider } from 'react-redux'
 import Expo, { Constants, AppLoading } from 'expo'
 import { persistor, store,  } from './store'
-import { color } from './style'
+import { color } from './Style'
 import { Root } from './Containers'
 import { PersistGate } from 'redux-persist/es/integration/react'
 

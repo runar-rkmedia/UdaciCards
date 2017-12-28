@@ -1,7 +1,7 @@
 import React from 'react'
 import { H1, H2, H3, Text, Button, View } from 'native-base'
 import { StyleSheet, Animated } from 'react-native'
-import { baseStyle, color } from '../style'
+import { baseStyle, color } from '../Style'
 import { exampleData } from '../utils'
 import SvgUri from 'react-native-svg-uri'
 interface Props { }

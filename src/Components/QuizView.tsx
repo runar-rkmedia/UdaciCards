@@ -4,7 +4,7 @@ import { FlashOption } from '../Components'
 import { connect, Dispatch } from 'react-redux'
 import { setUserAnswer } from '../actions'
 import { getUserScore } from '../utils'
-import { color } from '../style'
+import { color } from '../Style'
 import { NavigationScreenConfigProps } from 'react-navigation'
 import { Serie, StoreState, Card as CardI, CardOptions } from '../store'
 

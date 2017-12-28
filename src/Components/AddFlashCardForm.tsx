@@ -9,7 +9,7 @@ import { NavigationScreenConfigProps } from 'react-navigation'
 import { addCard } from '../actions'
 import { SelectSeries, OptionsForm, NumeralsForm } from './'
 import { isNumber } from '../utils'
-import { inputProps } from '../style'
+import { inputProps } from '../Style'
 import { MyStack } from '../Containers'
 
 interface Props extends NavigationScreenConfigProps {
