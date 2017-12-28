@@ -176,7 +176,7 @@ class AddFlashCardFormC extends Component<IConnectProps, State> {
             keyboardType="phone-pad"
             onChange={(e: any) => this.onChange('points', e.nativeEvent.text)}
           />
-          <Label>Question</Label>
+          <Label>Points</Label>
         </Item>
         {type && (type === CardTypes.options ? options && (
           <OptionsForm
