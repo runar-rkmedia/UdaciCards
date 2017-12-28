@@ -19,7 +19,7 @@ const initialState: State = {
   answers: {}
 }
 
-export class SerieViewC extends React.Component<Props & IConnectProps, State> {
+class QuizViewC extends React.Component<Props & IConnectProps, State> {
   state = initialState
   answer = (cardID: string, option: CardOptions) => {
     this.props.setUserAnswer(this.props.cardsHash[cardID], option.correct)
@@ -122,4 +122,4 @@ const connectCreator = connect(
   },
 )
 type IConnectProps = typeof connectCreator.allProps
-export const SerieView = connectCreator(SerieViewC)
+export const QuizView = connectCreator(QuizViewC)
