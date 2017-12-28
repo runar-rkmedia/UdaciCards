@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Alert } from 'react-native'
 import {
-  Form, Item, Input, Label, Picker, Button, Text
+  Form, Item, Input, Label, Button, Text
 } from 'native-base'
 import { Card, CardTypes, CardNumeral, StoreState, Serie } from '../store'
 import { connect, Dispatch } from 'react-redux'
@@ -157,19 +157,6 @@ class AddFlashCardFormC extends Component<IConnectProps, State> {
             onValueChange: (Id) => onChange('seriesId', Id)
           }}
         />
-        <Item>
-          <Label>Type</Label>
-          <Picker
-            iosHeader="Type of option to choose from"
-            placeholder="Type of option to choose from"
-            mode="dropdown"
-            selectedValue={type}
-            onValueChange={(value: CardTypes) => onChange('type', value)}
-          >
-            <Picker.Item label="Choice" value={CardTypes.options} />
-            <Picker.Item label="Slider for numbers" value={CardTypes.slider} />
-          </Picker>
-        </Item>
         <Item floatingLabel={true}>
           <Input
             {...inputProps}

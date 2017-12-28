@@ -39,7 +39,7 @@ class QuizViewC extends React.Component<IConnectProps, State> {
   renderCard = (card: CardI) => {
     const { cards } = this.props
     const { answers } = this.state
-    const { question, numeral, options, points } = card
+    const { question, options, points } = card
     const index = cards.indexOf(card)
     const answerGiven = answers[card.id]
     let answeredCorrectly = false
@@ -49,7 +49,6 @@ class QuizViewC extends React.Component<IConnectProps, State> {
       <Card style={{ elevation: 3 }}>
         <CardItem header={true}>
           <Text>{`${index + 1}/${cards.length}: ${question}`}</Text>
-          <Text note={true}>{numeral ? 'How much...' : options ? 'What...' : null}</Text>
         </CardItem>
         <CardItem>
           <Body>
