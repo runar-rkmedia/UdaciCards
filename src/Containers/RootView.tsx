@@ -71,13 +71,13 @@ const Stack: StackT = {
 const FlashCardsListSeries = StackNavigator(
   Stack,
   {
-    initialRouteName: 'ListSeries'
+    initialRouteName: MyStack.ListSeries
   }
 )
 const FlashCardsAddCategory = StackNavigator(
   Stack,
   {
-    initialRouteName: 'AddCategory'
+    initialRouteName: MyStack.AddCategory
   }
 )
 

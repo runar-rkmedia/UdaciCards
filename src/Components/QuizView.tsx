@@ -1,8 +1,11 @@
 import React from 'react'
-import { View, Text, Card, DeckSwiper, Body, CardItem } from 'native-base'
+import { Text, Card, DeckSwiper, Body, CardItem, H1, H2, Button, View } from 'native-base'
 import { FlashOption } from '../Components'
 import { connect, Dispatch } from 'react-redux'
 import { setUserAnswer } from '../actions'
+import { getUserScore } from '../utils'
+import { color } from '../style'
+import { NavigationScreenConfigProps } from 'react-navigation'
 import { Serie, StoreState, Card as CardI, CardOptions } from '../store'
 
 interface Props {
@@ -13,13 +16,15 @@ interface State {
   answers: {
     [s: string]: any
   }
+  completed: boolean
 }
 
 const initialState: State = {
-  answers: {}
+  answers: {},
+  completed: false
 }
 
-class QuizViewC extends React.Component<Props & IConnectProps, State> {
+class QuizViewC extends React.Component<IConnectProps, State> {
   state = initialState
   answer = (cardID: string, option: CardOptions) => {
     this.props.setUserAnswer(this.props.cardsHash[cardID], option.correct)
@@ -39,6 +44,7 @@ class QuizViewC extends React.Component<Props & IConnectProps, State> {
     const answerGiven = answers[card.id]
     let answeredCorrectly = false
     let correctAnswers: string[] = []
+    const answeredAll = cards.length === Object.keys(answers).length
     return (
       <Card style={{ elevation: 3 }}>
         <CardItem header={true}>
@@ -82,7 +88,41 @@ class QuizViewC extends React.Component<Props & IConnectProps, State> {
               )
           )}
         </CardItem>
+        {answeredAll && this.renderFinished()}
       </Card>
+    )
+  }
+  renderFinished = () => {
+    const { serie, navigation, userAnswer, cards } = this.props
+    const [points, sum, count, totalCount] = getUserScore(userAnswer, cards)
+    return (
+      <View>
+        <View
+          style={{
+            borderBottomColor: 'black',
+            borderBottomWidth: 1,
+          }}
+        />
+        <View
+          style={[
+            {
+              margin: 20,
+              padding: 20,
+              paddingBottom: 60,
+              backgroundColor: color.white
+            }
+          ]}
+        >
+          <H1>"{serie.displayText}"-quiz completed</H1>
+          <H2>{`You got ${points} points out of ${sum} possible.`}</H2>
+          <H2>{`You answered ${count} questions correctly out of ${totalCount}.`}</H2>
+          <Button
+            onPress={() => navigation.goBack()}
+          >
+            <Text>Go back</Text>
+          </Button>
+        </View>
+      </View>
     )
   }
   render() {
@@ -93,6 +133,10 @@ class QuizViewC extends React.Component<Props & IConnectProps, State> {
           <Text>Could not find this serie.</Text>
         </View>
       )
+    }
+    const { completed } = this.state
+    if (completed) {
+      return this.renderFinished()
     }
 
     return (
@@ -107,8 +151,9 @@ class QuizViewC extends React.Component<Props & IConnectProps, State> {
 }
 
 const connectCreator = connect(
-  ({ cards }: StoreState, { serie }: Props) => {
+  ({ cards, userAnswer }: StoreState, { serie }: Props) => {
     return {
+      userAnswer,
       cardsHash: cards,
       cards: serie && Object.keys(cards)
         .map(key => cards[key])
@@ -121,5 +166,5 @@ const connectCreator = connect(
     }
   },
 )
-type IConnectProps = typeof connectCreator.allProps
+type IConnectProps = typeof connectCreator.allProps & Props & NavigationScreenConfigProps
 export const QuizView = connectCreator(QuizViewC)
