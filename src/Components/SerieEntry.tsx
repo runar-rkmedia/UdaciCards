@@ -22,14 +22,21 @@ export class SerieEntryC extends React.Component<IConnectProps> {
             <Text>{displayText}</Text>
           </CardItem>
           <CardItem>
-            <Body>
-              <Text>{cards.length} Cards, {sum} points.</Text>
-              <Text>
-                {points === sum ?
-                  `You have answered all of these questions correctly, congratulations!` :
-                  `You currently have ${points} points for this serie.`}
-              </Text>
-            </Body>
+            {!!cards.length ? (
+              <Body>
+                <Text>{cards.length} Cards, {sum} points.</Text>
+                <Text>
+                  {points === sum ?
+                    `You have answered all of these questions correctly, congratulations!` :
+                    `You currently have ${points} points for this serie.`}
+                </Text>
+              </Body>
+            ) : (
+                <Body>
+                  <Text>No cards created for this serie, yet. Why don't you create the first one?</Text>
+                </Body>
+              )}
+
           </CardItem>
           <CardItem footer={true}>
             <Left>
@@ -42,15 +49,17 @@ export class SerieEntryC extends React.Component<IConnectProps> {
                 <Text>Add a Card</Text>
               </Button>
             </Left>
-            <Right>
-              <Button
-                iconLeft={true}
-                onPress={() => navigation.navigate(MyStack.QuizView, { serie })}
-              >
-                <Icon name="flash" />
-                <Text>Start a quiz</Text>
-              </Button>
-            </Right>
+            {!!cards.length && (
+              <Right>
+                <Button
+                  iconLeft={true}
+                  onPress={() => navigation.navigate(MyStack.QuizView, { serie })}
+                >
+                  <Icon name="flash" />
+                  <Text>Start a quiz</Text>
+                </Button>
+              </Right>
+            )}
           </CardItem>
         </Card>
       </Content>

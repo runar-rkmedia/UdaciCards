@@ -32,7 +32,7 @@ export class SeriesListC extends Component<Props & IConnectProps> {
       >
         <Left>
           {left ? left : (
-            <Icon name={userPoints === sumOfPoints ? iconOS('star') : iconOS('star-outline')} />
+            <Icon name={userPoints && userPoints === sumOfPoints ? iconOS('star') : iconOS('star-outline')} />
           )}
         </Left>
         <Body>
