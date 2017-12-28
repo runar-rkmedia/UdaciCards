@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import Expo, { Constants, AppLoading } from 'expo'
 import { persistor, store,  } from './store'
 import { color } from './Style'
+import { udaciCardsNotifications } from './utils'
 import { Root } from './Containers'
 import { PersistGate } from 'redux-persist/es/integration/react'
 
@@ -28,6 +29,9 @@ export default class extends Component<{}, State> {
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
     })
     this.setState({ fontsAreLoaded: true })
+  }
+  componentDidMount() {
+    udaciCardsNotifications.set()
   }
 
   render() {

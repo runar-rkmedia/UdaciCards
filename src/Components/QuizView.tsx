@@ -3,7 +3,7 @@ import { Text, Card, DeckSwiper, Body, CardItem, H1, H2, Button, View } from 'na
 import { FlashOption } from '../Components'
 import { connect, Dispatch } from 'react-redux'
 import { setUserAnswer } from '../actions'
-import { getUserScore } from '../utils'
+import { getUserScore, udaciCardsNotifications } from '../utils'
 import { color } from '../Style'
 import { NavigationScreenConfigProps } from 'react-navigation'
 import { Serie, StoreState, Card as CardI, CardOptions } from '../store'
@@ -16,25 +16,32 @@ interface State {
   answers: {
     [s: string]: any
   }
-  completed: boolean
 }
 
 const initialState: State = {
   answers: {},
-  completed: false
 }
 
 class QuizViewC extends React.Component<IConnectProps, State> {
   state = initialState
   answer = (cardID: string, option: CardOptions) => {
     this.props.setUserAnswer(this.props.cardsHash[cardID], option.correct)
-    this.setState((state): State => ({
-      ...state,
-      answers: {
-        ...state.answers,
-        [cardID]: option.displayText
+    this.setState((state): State => {
+      const { cards } = this.props
+      const newState: State = {
+        ...state,
+        answers: {
+          ...state.answers,
+          [cardID]: option.displayText
+        }
       }
-    }))
+      const answeredAll = cards.length === Object.keys(newState.answers).length
+      if (answeredAll) {
+        udaciCardsNotifications.clear()
+          .then(udaciCardsNotifications.set)
+      }
+      return newState
+    })
   }
   renderCard = (card: CardI) => {
     const { cards } = this.props
@@ -132,10 +139,6 @@ class QuizViewC extends React.Component<IConnectProps, State> {
           <Text>Could not find this serie.</Text>
         </View>
       )
-    }
-    const { completed } = this.state
-    if (completed) {
-      return this.renderFinished()
     }
 
     return (
