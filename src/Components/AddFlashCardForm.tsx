@@ -10,6 +10,7 @@ import { addCard } from '../actions'
 import { SelectSeries, OptionsForm, NumeralsForm } from './'
 import { isNumber } from '../utils'
 import { inputProps } from '../style'
+import { MyStack } from '../Containers'
 
 interface Props extends NavigationScreenConfigProps {
   serie?: Serie
@@ -152,7 +153,7 @@ class AddFlashCardFormC extends Component<IConnectProps, State> {
           {...{
             seriesId,
             series,
-            onAdd: () => navigation.navigate('AddSerie'),
+            onAdd: () => navigation.navigate(MyStack.AddSerie),
             onValueChange: (Id) => onChange('seriesId', Id)
           }}
         />

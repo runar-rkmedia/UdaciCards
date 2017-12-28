@@ -2,7 +2,7 @@ import React from 'react'
 import { ListAllCategories } from '../Components'
 import { Content, Icon, Fab, Button, Container, } from 'native-base'
 import { NavigationScreenConfigProps } from 'react-navigation'
-
+import { MyStack } from '../Containers'
 interface Props {
   edit: boolean
 }
@@ -38,7 +38,7 @@ export class ListSeries extends React.Component<Props & NavigationScreenConfigPr
             containerStyle={{}}
             style={{ backgroundColor: '#5067FF' }}
             position="bottomRight"
-            onPress={() => navigation.navigate('AddCategory')}
+            onPress={() => navigation.navigate(MyStack.AddCategory)}
           >
             <Icon name="add" />
           </Fab>

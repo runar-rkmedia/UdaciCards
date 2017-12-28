@@ -15,6 +15,22 @@ interface State {
 }
 
 const Stack = {
+export enum MyStack {
+  ListSeries = 'ListSeries',
+  QuizView = 'QuizView',
+  SerieEntry = 'SerieEntry',
+  AddFlashCard = 'AddFlashCard',
+  AddSerie = 'AddSerie',
+  AddCategory = 'AddCategory',
+}
+
+type StackT = {
+  [s in MyStack]: NavigationRouteConfig<{
+    screen: any
+  }>
+}
+
+const Stack: StackT = {
   ListSeries: { screen: withMappedNavigationProps(ListSeries) },
   SerieView: { screen: withMappedNavigationProps(SerieView) },
   AddFlashCard: { screen: withMappedNavigationProps(EditSerie) },

@@ -7,6 +7,7 @@ import { StyleSheet } from 'react-native'
 import { NavigationScreenConfigProps } from 'react-navigation'
 import { Col, Grid } from 'react-native-easy-grid'
 import { getUserScore } from '../utils'
+import { MyStack } from '../Containers'
 interface Props extends NavigationScreenConfigProps {
   edit?: boolean
 }
@@ -47,7 +48,7 @@ class ListAllCategoriesC extends React.Component<Props & IConnectProps, State> {
                       <Button
                         transparent={true}
                         onPress={() =>
-                          navigation.navigate('AddCategory', { category })
+                          navigation.navigate(MyStack.AddCategory, { category })
                         }
                       >
                         <Text style={{ fontSize: 18 }}>{displayText} (Edit)</Text>
@@ -75,7 +76,7 @@ class ListAllCategoriesC extends React.Component<Props & IConnectProps, State> {
                 <SeriesList
                   series={series[key]}
                   onPress={(id: string) => navigation.navigate(
-                    edit ? 'AddFlashCard' : 'SerieView',
+                    edit ? 'AddFlashCard' : 'SerieEntry',
                     { serie: series[key][id] })
                   }
                 />
