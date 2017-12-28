@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
 
-import { StackNavigator } from 'react-navigation'
-import { ListSeries, EditSerie } from './'
+import { StackNavigator, NavigationRouteConfig, NavigationScreenConfigProps } from 'react-navigation'
+import { ListSeries } from './'
+import { AddFlashCardForm } from '../Components'
 import { store } from '../store'
-import { AddSerie, AddCategory, SerieView, Welcome } from '../Components/'
+import {
+  AddSerie,
+  AddCategory,
+  QuizView,
+  Welcome,
+  SerieEntry
+} from '../Components/'
 
 import { withMappedNavigationProps } from 'react-navigation-props-mapper'
 
@@ -14,7 +21,6 @@ interface State {
   initialRouteName: string
 }
 
-const Stack = {
 export enum MyStack {
   ListSeries = 'ListSeries',
   QuizView = 'QuizView',
@@ -32,10 +38,35 @@ type StackT = {
 
 const Stack: StackT = {
   ListSeries: { screen: withMappedNavigationProps(ListSeries) },
-  SerieView: { screen: withMappedNavigationProps(SerieView) },
-  AddFlashCard: { screen: withMappedNavigationProps(EditSerie) },
+  SerieEntry: {
+    screen: withMappedNavigationProps(SerieEntry),
+    navigationOptions: (props: NavigationScreenConfigProps) => ({
+      title: `${props.navigation.state.params.serie.displayText}`,
+    }
+    ),
+
+  },
+  QuizView: {
+    screen: withMappedNavigationProps(QuizView),
+    navigationOptions: (props: NavigationScreenConfigProps) => ({
+      title: `Quiz: ${props.navigation.state.params.serie.displayText}`,
+    }
+    ),
+  },
+  AddFlashCard: {
+    screen: withMappedNavigationProps(AddFlashCardForm),
+    navigationOptions: (props: NavigationScreenConfigProps) => ({
+      title: `Add Card: ${props.navigation.state.params.serie.displayText}`,
+    }
+    ),
+  },
   AddSerie: { screen: AddSerie },
-  AddCategory: { screen: withMappedNavigationProps(AddCategory) },
+  AddCategory: {
+    screen: withMappedNavigationProps(AddCategory),
+    navigationOptions: {
+      title: 'Add Category'
+    }
+  },
 }
 const FlashCardsListSeries = StackNavigator(
   Stack,

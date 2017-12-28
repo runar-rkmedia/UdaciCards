@@ -1,7 +1,6 @@
 import React from 'react'
 import { Button, Text, View } from 'native-base'
 import { Serie } from '../store'
-// import { jssOS } from '../utils'
 import { SeriesList } from './'
 
 interface Props {
