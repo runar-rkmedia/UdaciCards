@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, Card, DeckSwiper, Body, CardItem, H1, H2, Button, View } from 'native-base'
+import { Text, Card, DeckSwiper, Body, CardItem, H1, H2, Button, View, Icon, Left, Right } from 'native-base'
 import { FlashOption } from '../Components'
 import { connect, Dispatch } from 'react-redux'
 import { setUserAnswer } from '../actions'
@@ -122,11 +122,20 @@ class QuizViewC extends React.Component<IConnectProps, State> {
           <H1>"{serie.displayText}"-quiz completed</H1>
           <H2>{`You got ${points} points out of ${sum} possible.`}</H2>
           <H2>{`You answered ${count} questions correctly out of ${totalCount}.`}</H2>
-          <Button
-            onPress={() => navigation.goBack()}
-          >
-            <Text>Go back</Text>
-          </Button>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Button
+              onPress={() => navigation.goBack()}
+            >
+              <Icon name="arrow-back" />
+              <Text>Back to serie-overview</Text>
+            </Button>
+            <Button
+              onPress={() => this.setState(initialState)}
+            >
+              <Icon name="refresh" />
+              <Text>Retry quiz</Text>
+            </Button>
+          </View>
         </View>
       </View>
     )
