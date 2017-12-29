@@ -31,7 +31,7 @@ class ListAllCategoriesC extends React.Component<Props & IConnectProps, State> {
         {Object.keys(categories).map(key => {
           const category = categories[key]
           const { displayText } = category
-          const categorySeries = Object.keys(series[key]).map(k => series[key][k])
+          const categorySeries =  series[key] ? Object.keys(series[key]).map(k => series[key][k]) : []
           const categoryCards = Object.keys(cards).map(k => cards[k])
             .filter(card => categorySeries.find(serie => serie.id === card.seriesId))
           const [points, sum] = getUserScore(userAnswer, categoryCards)
